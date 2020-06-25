@@ -4,10 +4,7 @@
     <bookmark url="file://$PROJECT_DIR$/src/copy_code_to_s3/copy_main.py" line="2" mnemonic="3" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c1705476-694e-4f81-aac0-af105e728cff" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-    </list>
+    <list default="true" id="c1705476-694e-4f81-aac0-af105e728cff" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
