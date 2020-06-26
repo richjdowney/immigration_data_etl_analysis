@@ -5,11 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c1705476-694e-4f81-aac0-af105e728cff" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/utils/config.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dags/immigration_data_etl.py" beforeDir="false" afterPath="$PROJECT_DIR$/dags/immigration_data_etl.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/spark_runner.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/spark_runner.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test_module1/test.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/test_module1/emr_step_config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/test_module1/emr_step_config.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/test_module1/emr_step_config.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
