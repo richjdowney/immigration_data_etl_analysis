@@ -54,7 +54,7 @@
         <counts>
           <entry key="Python Console" value="99" />
           <entry key="dummy" value="96" />
-          <entry key="gitignore" value="59" />
+          <entry key="gitignore" value="71" />
           <entry key="py" value="5814" />
           <entry key="test_module_1_spark_step" value="8" />
           <entry key="yaml" value="308" />
@@ -64,7 +64,7 @@
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="JSON" value="8" />
-          <entry key="PLAIN_TEXT" value="155" />
+          <entry key="PLAIN_TEXT" value="167" />
           <entry key="Python" value="5913" />
           <entry key="YAML" value="532" />
         </counts>
@@ -84,11 +84,7 @@
       </file>
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/.gitignore">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="220">
-              <caret line="10" column="7" selection-start-line="10" selection-start-column="7" selection-end-line="10" selection-end-column="7" />
-            </state>
-          </provider>
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
     </leaf>
@@ -593,11 +589,7 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="10" column="7" selection-start-line="10" selection-start-column="7" selection-end-line="10" selection-end-column="7" />
-        </state>
-      </provider>
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
   </component>
 </project>
