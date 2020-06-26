@@ -5,10 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c1705476-694e-4f81-aac0-af105e728cff" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/utils/secrets.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/dags/immigration_data_etl.py" beforeDir="false" afterPath="$PROJECT_DIR$/dags/immigration_data_etl.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/spark_runner.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/spark_runner.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/test_module1/emr_step_config.py" beforeDir="false" afterPath="$PROJECT_DIR$/src/test_module1/emr_step_config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utils/config.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/utils/config.yaml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -39,47 +40,58 @@
       <usages-collector id="statistics.file.extensions.open">
         <counts>
           <entry key="PKG-INFO" value="1" />
+          <entry key="gitignore" value="1" />
           <entry key="py" value="62" />
           <entry key="test_module_1_spark_step" value="1" />
           <entry key="txt" value="3" />
-          <entry key="yaml" value="1" />
+          <entry key="yaml" value="3" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="JSON" value="1" />
-          <entry key="PLAIN_TEXT" value="4" />
+          <entry key="PLAIN_TEXT" value="5" />
           <entry key="Python" value="62" />
-          <entry key="YAML" value="1" />
+          <entry key="YAML" value="3" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
           <entry key="Python Console" value="99" />
           <entry key="dummy" value="96" />
-          <entry key="py" value="5772" />
+          <entry key="gitignore" value="28" />
+          <entry key="py" value="5814" />
           <entry key="test_module_1_spark_step" value="8" />
-          <entry key="yaml" value="289" />
+          <entry key="yaml" value="308" />
           <entry key="yml" value="224" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
           <entry key="JSON" value="8" />
-          <entry key="PLAIN_TEXT" value="96" />
-          <entry key="Python" value="5871" />
-          <entry key="YAML" value="513" />
+          <entry key="PLAIN_TEXT" value="124" />
+          <entry key="Python" value="5913" />
+          <entry key="YAML" value="532" />
         </counts>
       </usages-collector>
     </session>
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="true">
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dags/immigration_data_etl.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1298">
-              <caret line="105" column="5" lean-forward="true" selection-start-line="105" selection-start-column="5" selection-end-line="105" selection-end-column="5" />
+            <state relative-caret-position="440">
+              <caret line="36" column="49" selection-start-line="36" selection-start-column="49" selection-end-line="36" selection-end-column="49" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="88">
+              <caret line="4" selection-start-line="4" selection-end-line="4" />
             </state>
           </provider>
         </entry>
@@ -135,10 +147,12 @@
         <option value="$PROJECT_DIR$/utils/config.yml" />
         <option value="$PROJECT_DIR$/utils/test_load_yaml.py" />
         <option value="$PROJECT_DIR$/utils/load_config.py" />
-        <option value="$PROJECT_DIR$/utils/config.yaml" />
-        <option value="$PROJECT_DIR$/dags/immigration_data_etl.py" />
         <option value="$PROJECT_DIR$/src/spark_runner.py" />
         <option value="$PROJECT_DIR$/src/test_module1/emr_step_config.py" />
+        <option value="$PROJECT_DIR$/utils/secrets.yaml" />
+        <option value="$PROJECT_DIR$/utils/config.yaml" />
+        <option value="$PROJECT_DIR$/dags/immigration_data_etl.py" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -389,6 +403,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="3456" height="1416" extended-state="6" />
+    <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.072143696" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
@@ -534,7 +549,7 @@
         <state relative-caret-position="528">
           <caret line="24" column="17" lean-forward="true" selection-start-line="24" selection-start-column="17" selection-end-line="24" selection-end-column="17" />
           <folding>
-            <marker date="1593205651441" expanded="true" signature="41:270" ph="..." />
+            <marker date="1593209750523" expanded="true" signature="41:270" ph="..." />
           </folding>
         </state>
       </provider>
@@ -549,27 +564,41 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/utils/config.yaml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="633">
-          <caret line="34" column="53" selection-start-line="34" selection-start-column="53" selection-end-line="34" selection-end-column="53" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/test_module1/emr_step_config.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="484">
           <caret line="22" lean-forward="true" selection-start-line="22" selection-end-line="22" />
           <folding>
-            <marker date="1593209270918" expanded="true" signature="42:44" ph="..." />
+            <marker date="1593209750514" expanded="true" signature="42:44" ph="..." />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/config.yaml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="44">
+          <caret line="2" column="32" selection-start-line="2" selection-start-column="32" selection-end-line="2" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/utils/secrets.yaml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="44">
+          <caret line="2" column="34" selection-start-line="2" selection-start-column="34" selection-end-line="2" selection-end-column="34" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/dags/immigration_data_etl.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1298">
-          <caret line="105" column="5" lean-forward="true" selection-start-line="105" selection-start-column="5" selection-end-line="105" selection-end-column="5" />
+        <state relative-caret-position="440">
+          <caret line="36" column="49" selection-start-line="36" selection-start-column="49" selection-end-line="36" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="88">
+          <caret line="4" selection-start-line="4" selection-end-line="4" />
         </state>
       </provider>
     </entry>

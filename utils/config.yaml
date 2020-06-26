@@ -1,7 +1,6 @@
 aws:
 
   # AWS settings for EMR cluster
-  Ec2KeyName: "spark-cluster.pem"
   MasterInstanceCount: 1
   MasterInstanceType: "m5.xlarge"
   SlaveInstanceCounts: 2

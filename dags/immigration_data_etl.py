@@ -17,6 +17,7 @@ from utils.load_config import load_yaml
 
 # Load the config file
 config = load_yaml("/home/ubuntu/immigration_code/utils/config.yaml")
+secrets_config = load_yaml("/home/ubuntu/immigration_code/utils/secrets.yaml")
 
 DEFAULT_ARGS = {
     "owner": config["airflow"]["owner"],
@@ -33,7 +34,7 @@ DEFAULT_ARGS = {
 
 JOB_FLOW_OVERRIDES = {
     "Instances": {
-        "Ec2KeyName": config["aws"]["Ec2KeyName"],
+        "Ec2KeyName": secrets_config["aws_secrets"]["Ec2KeyName"],
         "InstanceGroups": [
             {
                 "InstanceCount": config["aws"]["MasterInstanceCount"],

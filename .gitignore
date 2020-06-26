@@ -1,0 +1,5 @@
+build/
+dist/
+utils/secrets.yaml
+__pycache__/
+scratch/
