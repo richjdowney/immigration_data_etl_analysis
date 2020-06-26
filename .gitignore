@@ -1,5 +1,5 @@
 build/
 dist/
-utils/secrets.yaml
+secrets.yaml
 __pycache__/
 scratch/
