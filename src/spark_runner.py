@@ -16,10 +16,10 @@ if __name__ == "__main__":
 
     task = sys.argv[1]
 
-    if task == "module 1":
+    if task == "module_1":
         print_success1()
 
-    if task == "module 2":
+    if task == "module_2":
         print_success2()
 
     spark.stop()

@@ -12,6 +12,7 @@ from airflow.contrib.operators.emr_terminate_job_flow_operator import (
 )
 from airflow.operators.python_operator import PythonOperator
 from src.copy_code_to_s3.copy_main import copy_app_to_s3
+from src.test_module1.test import add_step_to_emr
 
 
 DEFAULT_ARGS = {
@@ -77,24 +78,7 @@ with DAG(
     )
 
     # Step to run the test submit
-    SPARK_TEST_STEP = [
-        {
-            'Name': "Run spark step",
-            'ActionOnFailure': 'CONTINUE',
-            'HadoopJarStep': {
-                'Jar': 'command-runner.jar',
-                "Args": [
-                    "spark-submit",
-                    "--deploy-mode",
-                    "cluster",
-                    "--py-files",
-                    "s3://immigration-data-etl/test_submit-0.1-py3.7.egg",
-                    "s3://immigration-data-etl/spark_runner.py",
-                    "module 1"
-                ]
-            }
-        }
-    ]
+    SPARK_TEST_STEP=add_step_to_emr()
 
     step_adder = EmrAddStepsOperator(
         task_id="add_steps",
