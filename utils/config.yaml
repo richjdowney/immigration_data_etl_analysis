@@ -1,0 +1,35 @@
+aws:
+
+  # AWS settings for EMR cluster
+  Ec2KeyName: "spark-cluster.pem"
+  MasterInstanceCount: 1
+  MasterInstanceType: "m5.xlarge"
+  SlaveInstanceCounts: 2
+  SlaveInstanceType: "m5.xlarge"
+  TerminateAfterComplete: True
+  TerminateProtect: False
+  JobFlowRole: "EMR_EC2_DefaultRole"
+  ServiceRole: "EMR_DefaultRole"
+  ClusterName: "Test cluster"
+  LogUri: "s3://aws-logs-800613416076-us-west-2"
+  ReleaseLabel: "emr-5.28.0"
+
+airflow:
+
+  # Airflow default settings
+  owner: "Rich"
+  start_date: datetime(2020, 6, 20)
+  end_date: datetime(2020, 6, 20)
+  depends_on_past: False
+  retries: 0
+  retry_delay: 5
+  catchup: False
+  email: "downey2k@hotmail.com
+  email_on_failure: False
+  email_on_retry: False
+
+runner_files:
+
+  # Paths to runner files (egg app, main runner)
+  egg: "s3://immigration-data-etl/test_submit-0.1-py3.7.egg"
+  runner: "s3://immigration-data-etl/spark_runner.py"
