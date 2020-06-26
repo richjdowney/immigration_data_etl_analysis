@@ -23,7 +23,7 @@ airflow:
   retries: 0
   retry_delay: 5
   catchup: False
-  email: "downey2k@hotmail.com
+  email: "downey2k@hotmail.com"
   email_on_failure: False
   email_on_retry: False
 
