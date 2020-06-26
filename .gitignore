@@ -8,4 +8,4 @@ __pycache__/
 build/
 dist/
 scratch/
-secrets.yaml
+/utils/secrets.yaml
