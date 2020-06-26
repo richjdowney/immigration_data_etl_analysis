@@ -1,4 +1,3 @@
-# ignore IDE related files
 *.env
 *.bak
 **/.idea
