@@ -12,48 +12,51 @@ from airflow.contrib.operators.emr_terminate_job_flow_operator import (
 )
 from airflow.operators.python_operator import PythonOperator
 from src.copy_code_to_s3.copy_main import copy_app_to_s3
-from src.test_module1.test import add_step_to_emr
+from src.test_module1.emr_step_config import add_step_to_emr
+from utils.load_config import load_yaml
 
+# Load the config file
+config = load_yaml("/home/ubuntu/immigration_code/utils/config.yaml")
 
 DEFAULT_ARGS = {
-    "owner": "Rich",
-    "start_date": datetime(2020, 6, 20),
-    "end_date": datetime(2020, 6, 20),
-    "depends_on_past": False,
-    "retries": 0,
-    "retry_delay": timedelta(minutes=5),
-    "catchup": False,
-    "email": ["downey2k@hotmail.com"],
-    "email_on_failure": False,
-    "email_on_retry": False,
+    "owner": config["airflow"]["owner"],
+    "start_date": config["airflow"]["start_date"],
+    "end_date": config["airflow"]["start_date"],
+    "depends_on_past": config["airflow"]["depends_on_past"],
+    "retries": config["airflow"]["retries"],
+    "retry_delay": timedelta(minutes=config["airflow"]["retry_delay"]),
+    "catchup": config["airflow"]["catchup"],
+    "email": [config["airflow"]["email"]],
+    "email_on_failure": config["airflow"]["email_on_failure"],
+    "email_on_retry": config["airflow"]["email_on_retry"],
 }
 
 JOB_FLOW_OVERRIDES = {
     "Instances": {
-        "Ec2KeyName": "spark-cluster",
+        "Ec2KeyName": config["aws"]["Ec2KeyName"],
         "InstanceGroups": [
             {
-                "InstanceCount": 1,
+                "InstanceCount": config["aws"]["MasterInstanceCount"],
                 "InstanceRole": "MASTER",
-                "InstanceType": "m5.xlarge",
+                "InstanceType": config["aws"]["MasterInstanceType"],
                 "Name": "Master node",
             },
             {
                 "Name": "Slave nodes",
                 "Market": "ON_DEMAND",
                 "InstanceRole": "CORE",
-                "InstanceType": "m5.xlarge",
-                "InstanceCount": 2,
+                "InstanceType": config["aws"]["SlaveInstanceType"],
+                "InstanceCount": config["aws"]["SlaveInstanceCounts"],
             },
         ],
-        "KeepJobFlowAliveWhenNoSteps": True,
-        "TerminationProtected": False,
+        "KeepJobFlowAliveWhenNoSteps": config["aws"]["TerminateAfterComplete"],
+        "TerminationProtected": config["aws"]["TerminateProtect"],
     },
-    "JobFlowRole": "EMR_EC2_DefaultRole",
-    "Name": "test_cluster",
-    "LogUri": "s3://aws-logs-800613416076-us-west-2",
-    "ReleaseLabel": "emr-5.28.0",
-    "ServiceRole": "EMR_DefaultRole",
+    "JobFlowRole": config["aws"]["JobFlowRole"],
+    "Name": config["aws"]["ClusterName"],
+    "LogUri": config["aws"]["LogUri"],
+    "ReleaseLabel": config["aws"]["ReleaseLabel"],
+    "ServiceRole": config["aws"]["ServiceRole"],
 }
 
 with DAG(
@@ -78,10 +81,12 @@ with DAG(
     )
 
     # Step to run the test submit
-    SPARK_TEST_STEP=add_step_to_emr()
+    SPARK_TEST_STEP = add_step_to_emr(task_id="add_steps1",
+                                      egg=config["runner_files"]["egg"],
+                                      runner=config["runner_files"]["runner"])
 
     step_adder = EmrAddStepsOperator(
-        task_id="add_steps",
+        task_id="add_steps1",
         job_flow_id="{{ task_instance.xcom_pull(task_ids='create_job_flow', key='return_value') }}",
         aws_conn_id="aws_default",
         steps=SPARK_TEST_STEP,
@@ -90,7 +95,7 @@ with DAG(
     step_checker = EmrStepSensor(
         task_id="watch_step",
         job_flow_id="{{ task_instance.xcom_pull('create_job_flow', key='return_value') }}",
-        step_id="{{ task_instance.xcom_pull(task_ids='add_steps', key='return_value')[0] }}",
+        step_id="{{ task_instance.xcom_pull(task_ids='add_steps1', key='return_value')[0] }}",
         aws_conn_id="aws_default",
     )
 

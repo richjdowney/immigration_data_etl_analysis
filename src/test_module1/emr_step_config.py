@@ -1,6 +1,6 @@
-def add_step_to_emr():
+def add_step_to_emr(task_id, egg, runner):
 
-    test_step = [
+    add_step = [
         {
             "Name": "Run spark step",
             "ActionOnFailure": "CONTINUE",
@@ -11,12 +11,12 @@ def add_step_to_emr():
                     "--deploy-mode",
                     "cluster",
                     "--py-files",
-                    "s3://immigration-data-etl/test_submit-0.1-py3.7.egg",
-                    "s3://immigration-data-etl/spark_runner.py",
-                    "module 1",
+                    egg,
+                    runner,
+                    task_id,
                 ],
             },
         }
     ]
 
-    return test_step
+    return add_step
