@@ -1,5 +1,1 @@
-build/
-dist/
 secrets.yaml
-__pycache__/
-scratch/

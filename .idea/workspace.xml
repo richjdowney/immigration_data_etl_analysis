@@ -5,11 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="c1705476-694e-4f81-aac0-af105e728cff" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/utils/secrets.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/dags/immigration_data_etl.py" beforeDir="false" afterPath="$PROJECT_DIR$/dags/immigration_data_etl.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/utils/config.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/utils/config.yaml" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -39,8 +36,9 @@
       </usages-collector>
       <usages-collector id="statistics.file.extensions.open">
         <counts>
+          <entry key="" value="1" />
           <entry key="PKG-INFO" value="1" />
-          <entry key="gitignore" value="1" />
+          <entry key="gitignore" value="2" />
           <entry key="py" value="62" />
           <entry key="test_module_1_spark_step" value="1" />
           <entry key="txt" value="3" />
@@ -50,7 +48,7 @@
       <usages-collector id="statistics.file.types.open">
         <counts>
           <entry key="JSON" value="1" />
-          <entry key="PLAIN_TEXT" value="5" />
+          <entry key="PLAIN_TEXT" value="7" />
           <entry key="Python" value="62" />
           <entry key="YAML" value="3" />
         </counts>
@@ -89,11 +87,7 @@
       </file>
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/.gitignore">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="88">
-              <caret line="4" selection-start-line="4" selection-end-line="4" />
-            </state>
-          </provider>
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
     </leaf>
@@ -405,7 +399,7 @@
     <frame x="-8" y="-8" width="3456" height="1416" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.072143696" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.072143696" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -419,7 +413,7 @@
       <window_info anchor="bottom" id="Version Control" order="8" show_stripe_button="false" />
       <window_info anchor="bottom" id="Database Changes" order="9" show_stripe_button="false" />
       <window_info anchor="bottom" id="Event Log" order="10" sideWeight="0.5097173" side_tool="true" visible="true" weight="0.35424942" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="11" sideWeight="0.49028268" visible="true" weight="0.35424942" />
+      <window_info anchor="bottom" id="Terminal" order="11" sideWeight="0.49028268" visible="true" weight="0.35424942" />
       <window_info anchor="bottom" id="Python Console" order="12" sideWeight="0.49823323" weight="0.32962668" />
       <window_info anchor="bottom" id="File Transfer" order="13" sideWeight="0.49734983" weight="0.32962668" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -588,6 +582,9 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore.">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
     <entry file="file://$PROJECT_DIR$/dags/immigration_data_etl.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="440">
@@ -596,11 +593,7 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/.gitignore">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="88">
-          <caret line="4" selection-start-line="4" selection-end-line="4" />
-        </state>
-      </provider>
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
   </component>
 </project>
