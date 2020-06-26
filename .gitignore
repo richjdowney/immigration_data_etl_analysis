@@ -1,1 +1,11 @@
-/utils/secrets.yaml
+# ignore IDE related files
+*.env
+*.bak
+**/.idea
+.DS_Store
+.ipynb_checkpoints/
+__pycache__/
+build/
+dist/
+scratch/
+secrets.yaml
