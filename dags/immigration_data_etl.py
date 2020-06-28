@@ -1,4 +1,5 @@
 import sys
+
 sys.path.append("/home/ubuntu/immigration_code/")
 from airflow import DAG
 from airflow.contrib.operators.emr_create_job_flow_operator import (
@@ -23,7 +24,7 @@ log.info("Importing config file from {}".format(config_path))
 config = load_yaml(config_path)
 log.info("Succesfully imported the config file from {}".format(config_path))
 
-with DAG(**config['dag']) as dag:
+with DAG(**config["dag"]) as dag:
 
     # Create egg file and copy application files to s3
     upload_code = PythonOperator(
@@ -44,9 +45,7 @@ with DAG(**config['dag']) as dag:
     log.info("Adding task add_steps1 to Spark cluster")
     # Step to run the test submit
     SPARK_STEP = add_step_to_emr(
-       task_id="add_steps1",
-       egg=config["s3"]["egg"],
-       runner=config["s3"]["runner"],
+        task_id="add_steps1", egg=config["s3"]["egg"], runner=config["s3"]["runner"]
     )
 
     step_adder = EmrAddStepsOperator(

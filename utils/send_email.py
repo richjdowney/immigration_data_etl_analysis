@@ -13,8 +13,10 @@ def notify_email(contextDict, **kwargs):
     <br>
     There's been an error in the {task_name} job.<br>
     <br>
-    Forever yours,<br>
+    Have fun debugging :),<br>
     Airflow bot <br>
-    """.format(**contextDict)
+    """.format(
+        **contextDict
+    )
 
-    send_email('richjdowney@gmail.com', title, body)
+    send_email("richjdowney@gmail.com", title, body)
