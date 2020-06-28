@@ -1,34 +1,61 @@
-aws:
+dag:
+
+  # Config for DAG run
+  dag_id: "test_emr_cluster_creation"
+  default_args:
+    owner: "Rich"
+    start_date: 2020-6-20
+    end_date: 2020-6-20
+    depends_on_past: False
+    retries: 0
+    catchup: False
+    email: "richjdowney@gmail.com"
+    email_on_failure: True
+    email_on_retry: False
+  schedule_interval: "@once"
+
+
+emr:
 
   # AWS settings for EMR cluster
-  MasterInstanceCount: 1
-  MasterInstanceType: "m5.xlarge"
-  SlaveInstanceCounts: 2
-  SlaveInstanceType: "m5.xlarge"
-  TerminateAfterComplete: True
-  TerminateProtect: False
+  Instances:
+    Ec2KeyName: "spark-cluster"
+    InstanceGroups:
+    - Name: "Master node"
+      InstanceRole: "MASTER"
+      InstanceCount: 1
+      InstanceType: "m5.xlarge"
+    - Name: "Slave nodes"
+      Market: "ON_DEMAND"
+      InstanceRole: "CORE"
+      InstanceType: "m5.xlarge"
+      InstanceCount: 2
+    KeepJobFlowAliveWhenNoSteps: True
+    TerminationProtected: False
   JobFlowRole: "EMR_EC2_DefaultRole"
   ServiceRole: "EMR_DefaultRole"
-  ClusterName: "Test cluster"
+  Name: "Test cluster"
   LogUri: "s3://aws-logs-800613416076-us-west-2"
   ReleaseLabel: "emr-5.28.0"
 
-airflow:
+s3:
 
-  # Airflow default settings
-  owner: "Rich"
-  start_date: datetime(2020, 6, 20)
-  end_date: datetime(2020, 6, 20)
-  depends_on_past: False
-  retries: 0
-  retry_delay: 5
-  catchup: False
-  email: "downey2k@hotmail.com"
-  email_on_failure: False
-  email_on_retry: False
+  # Config for s3
+  Bucket: "immigration-data-etl"
 
-runner_files:
-
-  # Paths to runner files (egg app, main runner)
+  # Paths to runner files on s3(egg app, main runner)
   egg: "s3://immigration-data-etl/test_submit-0.1-py3.7.egg"
   runner: "s3://immigration-data-etl/spark_runner.py"
+
+app:
+
+  # Config for files related to running the Spark app on emr
+  SrcPath: "/home/ubuntu/immigration_code/src/"
+  PathToEgg: "/home/ubuntu/immigration_code/src/dist/"
+  EggObject: "test_submit-0.1-py3.7.egg"
+  RunnerObject: "spark_runner.py"
+
+airflow:
+
+  # Config for airflow defaults
+  AwsCredentials: "aws_default"

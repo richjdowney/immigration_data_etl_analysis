@@ -1,5 +1,42 @@
 import boto3
 from airflow.contrib.hooks.aws_hook import AwsHook
+from typing import List, Dict
+
+
+def add_step_to_emr(task_id, egg, runner) -> List[Dict]:
+    """Function to add a step to emr
+
+    Parameters
+    ----------
+    task_id : str
+        name of the task to add
+    egg : str
+        name of the egg file containing the main application
+    runner : str
+        name of the main runner file
+
+    """
+
+    add_step = [
+        {
+            "Name": "Run spark step",
+            "ActionOnFailure": "CONTINUE",
+            "HadoopJarStep": {
+                "Jar": "command-runner.jar",
+                "Args": [
+                    "spark-submit",
+                    "--deploy-mode",
+                    "cluster",
+                    "--py-files",
+                    egg,
+                    runner,
+                    task_id,
+                ],
+            },
+        }
+    ]
+
+    return add_step
 
 
 def load_file_to_s3(file_name, bucket, aws_credentials_id, object_name=None):
