@@ -1,7 +1,7 @@
 dag:
 
   # Config for DAG run
-  dag_id: "test_emr_cluster_creation"
+  dag_id: "Immigration_data_ETL"
   default_args:
     owner: "Rich"
     start_date: 2020-6-20
@@ -34,9 +34,19 @@ emr:
     TerminationProtected: False
   JobFlowRole: "EMR_EC2_DefaultRole"
   ServiceRole: "EMR_DefaultRole"
-  Name: "Test cluster"
-  LogUri: "s3://aws-logs-800613416076-us-west-2"
+  Name: "Immigration ETL"
+  LogUri: "s3://immigration-data-etl/etl-log"
   ReleaseLabel: "emr-5.28.0"
+  Configurations:
+    - Classification: "spark-env"
+      Configurations:
+      - Classification: "export"
+        Properties:
+          PYSPARK_PYTHON: "/usr/bin/python3"
+  BootstrapActions:
+    - Name: "Install_Dependencies"
+      ScriptBootstrapAction:
+        Path: "s3://immigration-data-etl/bootstrap/install_dependencies.sh"
 
 s3:
 
@@ -44,18 +54,32 @@ s3:
   Bucket: "immigration-data-etl"
 
   # Paths to runner files on s3(egg app, main runner)
-  egg: "s3://immigration-data-etl/test_submit-0.1-py3.7.egg"
-  runner: "s3://immigration-data-etl/spark_runner.py"
+  egg: "s3://immigration-data-etl/application/test_submit-0.1-py2.7.egg"
+  runner: "s3://immigration-data-etl/application/spark_runner.py"
+
+  # Paths to the source data
+  input_data_path: "s3://immigration-data-etl/data-inputs/"
+  immigration_data_path: "sas_data"
 
 app:
 
   # Config for files related to running the Spark app on emr
-  SrcPath: "/home/ubuntu/immigration_code/src/"
-  PathToEgg: "/home/ubuntu/immigration_code/src/dist/"
-  EggObject: "test_submit-0.1-py3.7.egg"
+  RootPath: "/home/ubuntu/immigration_code/"
+  PathToBin: "/home/ubuntu/immigration_code/bin/"
+  PathToEgg: "/home/ubuntu/immigration_code/dist/"
+  PathToUtils: "/home/ubuntu/immigration_code/utils/"
+  EggObject: "test_submit-0.1-py2.7.egg"
   RunnerObject: "spark_runner.py"
+  DependenciesShell: "install_dependencies.sh"
+  Requirements: "requirements.txt"
 
 airflow:
 
   # Config for airflow defaults
   AwsCredentials: "aws_default"
+
+input:
+
+  # Config for input path and filenames
+  InputPath: "s3://immigration-data-etl/data-inputs/"
+  ImmigrationInput: "sas_data"

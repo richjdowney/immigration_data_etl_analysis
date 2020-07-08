@@ -1,37 +1,48 @@
-import sys
-sys.path.append("/home/ubuntu/immigration_code/")
 from utils.aws_utils import load_file_to_s3
-from utils.general_utils import create_egg
-from utils.load_config import load_yaml
 from utils.logging_framework import log
 
-# Make config available
-config = load_yaml("/home/ubuntu/immigration_code/utils/config.yaml")
 
+def copy_app_to_s3(*op_args):
+    """Runner to copy application files to s3
 
-def copy_app_to_s3() -> str:
-    """Runner to create egg file and copy application files to s3"""
+    Parameters
+    ----------
+    op_args : dict
+        config dictionary
 
-    # Create egg file to package latest code
-    create_egg(config["app"]["SrcPath"])
+    """
+    config = op_args[0]
 
     # Upload egg file to s3
     load_file_to_s3(
         file_name="{}{}".format(config["app"]["PathToEgg"], config["app"]["EggObject"]),
         bucket=config["s3"]["Bucket"],
         aws_credentials_id=config["airflow"]["AwsCredentials"],
-        object_name=config["app"]["EggObject"],
+        object_name="application/{}".format(config["app"]["EggObject"]),
     )
 
     # Upload main class file to s3
     load_file_to_s3(
-        file_name="{}{}".format(config["app"]["SrcPath"], config["app"]["RunnerObject"]),
+        file_name="{}{}".format(config["app"]["RootPath"], config["app"]["RunnerObject"]),
         bucket=config["s3"]["Bucket"],
         aws_credentials_id=config["airflow"]["AwsCredentials"],
-        object_name=config["app"]["RunnerObject"],
+        object_name="application/{}".format(config["app"]["RunnerObject"]),
+    )
+
+    # Upload requirements
+    load_file_to_s3(
+        file_name="{}{}".format(config["app"]["RootPath"], config["app"]["Requirements"]),
+        bucket=config["s3"]["Bucket"],
+        aws_credentials_id=config["airflow"]["AwsCredentials"],
+        object_name="bootstrap/{}".format(config["app"]["Requirements"]),
+    )
+
+    # Upload bootstrap shell script for dependencies
+    load_file_to_s3(
+        file_name="{}{}".format(config["app"]["PathToBin"], config["app"]["DependenciesShell"]),
+        bucket=config["s3"]["Bucket"],
+        aws_credentials_id=config["airflow"]["AwsCredentials"],
+        object_name="bootstrap/{}".format(config["app"]["DependenciesShell"]),
     )
 
     return log.info("Uploaded application to s3 succesfully!")
-
-
-copy_app_to_s3()

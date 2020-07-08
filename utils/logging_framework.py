@@ -30,7 +30,7 @@ logging.basicConfig(level=LOGGING_LEVEL, format=FMT, datefmt=DT_FMT)
 log = logging
 
 
-def format_title(msg: str):
+def format_title(msg):
     """Function to format a message title for logging
 
         Parameters
@@ -46,16 +46,18 @@ def format_title(msg: str):
     """
 
     max_msg_len = 120
-    assert len(msg) <= 120, f"max message length for a title is {max_msg_len}"
+    assert len(msg) <= 120, "max message length for a title is {}".format(max_msg_len)
     buffer_len = 10
     ln_len = len(msg) + (buffer_len * 2) + 2
 
     ln = ln_len * "#"
     buffer = buffer_len * " "
-    result = f"""
+    result = """
     {ln}
     #{buffer}{msg}{buffer}#
     {ln}
-    """
+    """.format(
+        ln=ln, buffer=buffer, msg=msg
+    )
 
     return result
