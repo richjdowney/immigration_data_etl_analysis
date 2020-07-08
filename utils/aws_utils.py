@@ -3,7 +3,9 @@ from airflow.contrib.hooks.aws_hook import AwsHook
 from typing import List, Dict
 
 
-def add_step_to_emr(task_id, egg, runner) -> List[Dict]:
+def add_step_to_emr(
+    task_id, egg, runner, input_data_path="", input_file_name=""
+) -> List[Dict]:
     """Function to add a step to emr
 
     Parameters
@@ -14,6 +16,10 @@ def add_step_to_emr(task_id, egg, runner) -> List[Dict]:
         name of the egg file containing the main application
     runner : str
         name of the main runner file
+    input_data_path : str
+        path to input data required by the step
+    input_file_name : str
+        name of input file
 
     """
 
@@ -31,6 +37,8 @@ def add_step_to_emr(task_id, egg, runner) -> List[Dict]:
                     egg,
                     runner,
                     task_id,
+                    input_data_path,
+                    input_file_name,
                 ],
             },
         }

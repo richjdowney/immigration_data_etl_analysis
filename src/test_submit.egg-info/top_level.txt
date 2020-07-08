@@ -1,3 +1,0 @@
-copy_code_to_s3
-test_module1
-test_module2
