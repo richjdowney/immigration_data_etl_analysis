@@ -8,10 +8,10 @@ from airflow.contrib.operators.emr_terminate_job_flow_operator import (
 from airflow.operators.python_operator import PythonOperator
 from airflow.operators.bash_operator import BashOperator
 from src.copy_code_to_s3.copy_main import copy_app_to_s3
-from utils.load_config import load_yaml
+from config.load_etl_config import load_yaml
 from utils.send_email import notify_email
 from utils.run_spark_jobs import add_spark_step
-from utils import constants
+from config import constants
 
 # Load the config file
 config = load_yaml(constants.config_path)
