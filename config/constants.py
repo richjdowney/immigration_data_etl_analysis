@@ -1,3 +1,3 @@
 """Constants for running immigration ETL"""
 
-config_path = "/home/ubuntu/immigration_code/utils/config.yaml"
+config_path = "/home/ubuntu/immigration_code/config/etl_config.yaml"

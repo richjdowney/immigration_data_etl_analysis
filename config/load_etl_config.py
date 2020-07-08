@@ -2,15 +2,14 @@ import yaml
 from typing import Any, Dict
 from utils.logging_framework import log
 import pydantic
-from datetime import datetime
 
 
 class ConfigDefaultArgs(pydantic.BaseModel):
     """Configuration for the default args when setting up the DAG"""
 
     owner: str
-    start_date: datetime.date
-    end_date: datetime.date
+    start_date: str
+    end_date: str
     depends_on_past: bool
     retries: int
     catchup: bool
@@ -26,7 +25,7 @@ class ConfigDag(pydantic.BaseModel):
     dag_id: str
 
     # Default args for DAG run e.g. owner, start_date, end_date
-    default_args: ConfigDefaultArgs = ConfigDefaultArgs()
+    default_args: ConfigDefaultArgs
 
     # DAG schedule interval
     schedule_interval: str
@@ -35,7 +34,7 @@ class ConfigDag(pydantic.BaseModel):
 class ConfigEmr(pydantic.BaseModel):
     """Configuration for EMR clusters"""
 
-    Instances: Dict[Any, Any]
+    Instances: Dict[str, Any]
 
     # EMR ec2 role
     JobFlowRole: str
@@ -53,7 +52,11 @@ class ConfigEmr(pydantic.BaseModel):
     ReleaseLabel: str
 
     # Cluster configurations
-    Configurations: Dict[Any, Any]
+
+    Configurations: Dict[str, Any]
+
+    # Path to dependencies shell script on s3
+    BootstrapActions: Dict[str, Any]
 
 
 class ConfigS3(pydantic.BaseModel):
@@ -109,9 +112,21 @@ class ConfigAirflow(pydantic.BaseModel):
 class ConfigInputs(pydantic.BaseModel):
     """Configuration for the input data paths and file names"""
 
-  # Config for input path and filenames
-  InputPath: "s3://immigration-data-etl/data-inputs/"
-  ImmigrationInput: "sas_data"
+    # Config for input path and filenames
+    InputPath: str
+    ImmigrationInput: str
+
+
+class Config(pydantic.BaseModel):
+    """Main configuration"""
+
+    dag: ConfigDag
+    emr: ConfigEmr
+    s3: ConfigS3
+    app: ConfigApp
+    airflow: ConfigAirflow
+    input: ConfigInputs
+
 
 class ConfigException(Exception):
     pass
@@ -142,5 +157,11 @@ def load_yaml(config_path) -> Dict[str, Any]:
 
     if config_path is None:
         raise ConfigException("Must supply path to the config file")
+
+    # Run the config file through pydantic to check types
+    try:
+        Config(**config)
+    except ValueError:
+        log.info("TypeError in config file")
 
     return config
