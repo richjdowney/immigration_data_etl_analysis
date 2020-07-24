@@ -1,5 +1,5 @@
 import yaml
-from typing import Any, Dict
+from typing import Any, Dict, Tuple
 from utils.logging_framework import log
 import pydantic
 
@@ -58,6 +58,9 @@ class ConfigEmr(pydantic.BaseModel):
     # Path to dependencies shell script on s3
     BootstrapActions: Dict[str, Any]
 
+    # Number of steps EMR can run concurrently
+    StepConcurrencyLevel: int
+
 
 class ConfigS3(pydantic.BaseModel):
     """Configuration for s3"""
@@ -68,10 +71,6 @@ class ConfigS3(pydantic.BaseModel):
     # Paths to runner files on s3(egg app, main runner)
     egg: str
     runner: str
-
-    # Paths to the source data
-    input_data_path: str
-    immigration_data_path: str
 
 
 class ConfigApp(pydantic.BaseModel):
@@ -115,6 +114,15 @@ class ConfigInputs(pydantic.BaseModel):
     # Config for input path and filenames
     InputPath: str
     ImmigrationInput: str
+    AirportCodesInput: str
+    CitiesInput: str
+
+class ConfigStaging(pydantic.BaseModel):
+
+    # Config for staging paths
+    ImmigrationStaging: str
+    AirportStaging: str
+    CitiesStaging: str
 
 
 class Config(pydantic.BaseModel):
@@ -126,13 +134,14 @@ class Config(pydantic.BaseModel):
     app: ConfigApp
     airflow: ConfigAirflow
     input: ConfigInputs
+    staging: ConfigStaging
 
 
 class ConfigException(Exception):
     pass
 
 
-def load_yaml(config_path) -> Dict[str, Any]:
+def load_yaml(config_path):
 
     """Function to load yaml file from path
 
@@ -157,11 +166,5 @@ def load_yaml(config_path) -> Dict[str, Any]:
 
     if config_path is None:
         raise ConfigException("Must supply path to the config file")
-
-    # Run the config file through pydantic to check types
-    try:
-        Config(**config)
-    except ValueError:
-        log.info("TypeError in config file")
 
     return config

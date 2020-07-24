@@ -4,7 +4,7 @@ from typing import List, Dict
 
 
 def add_step_to_emr(
-    task_id, egg, runner, input_data_path="", input_file_name=""
+    task_id, egg, runner, input_data_path="", input_file_name="", staging_path=""
 ) -> List[Dict]:
     """Function to add a step to emr
 
@@ -20,6 +20,8 @@ def add_step_to_emr(
         path to input data required by the step
     input_file_name : str
         name of input file
+    staging_path : str
+        name of the path for staging tables
 
     """
 
@@ -39,6 +41,7 @@ def add_step_to_emr(
                     task_id,
                     input_data_path,
                     input_file_name,
+                    staging_path
                 ],
             },
         }

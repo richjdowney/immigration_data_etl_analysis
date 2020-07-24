@@ -47,6 +47,7 @@ emr:
     - Name: "Install_Dependencies"
       ScriptBootstrapAction:
         Path: "s3://immigration-data-etl/bootstrap/install_dependencies.sh"
+  StepConcurrencyLevel: 2
 
 s3:
 
@@ -56,10 +57,6 @@ s3:
   # Paths to runner files on s3(egg app, main runner)
   egg: "s3://immigration-data-etl/application/test_submit-0.1-py2.7.egg"
   runner: "s3://immigration-data-etl/application/spark_runner.py"
-
-  # Paths to the source data
-  input_data_path: "s3://immigration-data-etl/data-inputs/"
-  immigration_data_path: "sas_data"
 
 app:
 
@@ -81,5 +78,24 @@ airflow:
 input:
 
   # Config for input path and filenames
-  InputPath: "s3://immigration-data-etl/data-inputs/"
-  ImmigrationInput: "sas_data"
+  InputPath: "s3://immigration-data-etl/"
+  ImmigrationInput: "data-inputs/immigration_data/"
+  AirportCodesInput: "data-inputs/airport-codes_csv.csv"
+  CitiesInput: "data-inputs/us-cities-demographics.csv"
+  CitResMapInput: "data-inputs/cit_res_mapping.csv"
+  ModeMapInput: "data-inputs/mode_mapping.csv"
+  StateMapInput: "data-inputs/state_mapping.csv"
+  VisaMapInput: "data-inputs/visa_mapping.csv"
+  PortMapInput: "data-inputs/port_mapping.txt"
+
+staging:
+
+  # Config for staging paths
+  ImmigrationStaging: "s3://immigration-data-etl/staging-tables/immigration_staging"
+  AirportStaging: "s3://immigration-data-etl/staging-tables/airport_staging"
+  CitiesStaging: "s3://immigration-data-etl/staging-tables/city_staging"
+  CitResMapStaging: "s3://immigration-data-etl/staging-tables/cit_res_map_staging"
+  ModeMapStaging: "s3://immigration-data-etl/staging-tables/mode_staging"
+  StateMapStaging: "s3://immigration-data-etl/staging-tables/state_staging"
+  VisaMapStaging: "s3://immigration-data-etl/staging-tables/visa_staging"
+  PortMapStaging: "s3://immigration-data-etl/staging-tables/port_staging"

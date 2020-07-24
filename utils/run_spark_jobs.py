@@ -5,7 +5,7 @@ from utils.send_email import notify_email
 from utils.logging_framework import log
 
 
-def add_spark_step(task, path_to_egg, runner, config):
+def add_spark_step(task, path_to_egg, runner, input_path, input_file, staging_path):
 
     """ Function to add a Spark step to emr
 
@@ -17,8 +17,12 @@ def add_spark_step(task, path_to_egg, runner, config):
         Path to the egg file containing the main Spark application
     runner : str
         Name of the main runner file
-    config : dict
-        dictionary with config
+    input_path : str
+        Path to the input data source
+    input_file : str
+        Name of the input data source file
+    staging_path : str
+        Name of the path for staging tables
 
     """
 
@@ -27,22 +31,24 @@ def add_spark_step(task, path_to_egg, runner, config):
         task_id="{}".format(task),
         egg=path_to_egg,
         runner=runner,
-        input_data_path=config["input"]["InputPath"],
-        input_file_name=config["input"]["ImmigrationInput"],
+        input_data_path=input_path,
+        input_file_name=input_file,
+        staging_path=staging_path,
     )
 
     step_adder = EmrAddStepsOperator(
-        task_id="add_step",
+        task_id="add_step_{}".format(task),
         job_flow_id="{{ task_instance.xcom_pull(task_ids='create_job_flow', key='return_value') }}",
         aws_conn_id="aws_default",
         steps=spark_step,
         on_failure_callback=notify_email,
     )
 
+    step_name = "add_step_{}".format(task)
     step_checker = EmrStepSensor(
         task_id="watch_{}".format(task),
         job_flow_id="{{ task_instance.xcom_pull('create_job_flow', key='return_value') }}",
-        step_id="{{ task_instance.xcom_pull(task_ids='add_step', key='return_value')[0] }}",
+        step_id="{{{{ task_instance.xcom_pull(task_ids='{}', key='return_value')[0] }}}}".format(step_name),
         aws_conn_id="aws_default",
         on_failure_callback=notify_email,
     )
