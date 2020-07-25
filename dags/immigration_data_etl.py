@@ -57,7 +57,7 @@ with DAG(**config["dag"]) as dag:
         runner=config["s3"]["runner"],
         input_path=config["input"]["InputPath"],
         input_file=config["input"]["ImmigrationInput"],
-        staging_path=config["staging"]["ImmigrationStaging"],
+        output_path=config["staging"]["ImmigrationStaging"],
     )
 
     # Stage the airport codes data
@@ -69,7 +69,7 @@ with DAG(**config["dag"]) as dag:
         runner=config["s3"]["runner"],
         input_path=config["input"]["InputPath"],
         input_file=config["input"]["AirportCodesInput"],
-        staging_path=config["staging"]["AirportStaging"],
+        output_path=config["staging"]["AirportStaging"],
     )
 
     task = "stage_cities"
@@ -80,7 +80,7 @@ with DAG(**config["dag"]) as dag:
         runner=config["s3"]["runner"],
         input_path=config["input"]["InputPath"],
         input_file=config["input"]["CitiesInput"],
-        staging_path=config["staging"]["CitiesStaging"],
+        output_path=config["staging"]["CitiesStaging"],
     )
 
     task = "stage_cit_res_map"
@@ -91,7 +91,7 @@ with DAG(**config["dag"]) as dag:
         runner=config["s3"]["runner"],
         input_path=config["input"]["InputPath"],
         input_file=config["input"]["CitResMapInput"],
-        staging_path=config["staging"]["CitResMapStaging"],
+        output_path=config["staging"]["CitResMapStaging"],
     )
 
     task = "stage_mode_map"
@@ -102,7 +102,7 @@ with DAG(**config["dag"]) as dag:
         runner=config["s3"]["runner"],
         input_path=config["input"]["InputPath"],
         input_file=config["input"]["ModeMapInput"],
-        staging_path=config["staging"]["ModeMapStaging"],
+        output_path=config["staging"]["ModeMapStaging"],
     )
 
     task = "stage_state_map"
@@ -113,7 +113,7 @@ with DAG(**config["dag"]) as dag:
         runner=config["s3"]["runner"],
         input_path=config["input"]["InputPath"],
         input_file=config["input"]["StateMapInput"],
-        staging_path=config["staging"]["StateMapStaging"],
+        output_path=config["staging"]["StateMapStaging"],
     )
 
     task = "stage_visa_map"
@@ -124,7 +124,7 @@ with DAG(**config["dag"]) as dag:
         runner=config["s3"]["runner"],
         input_path=config["input"]["InputPath"],
         input_file=config["input"]["VisaMapInput"],
-        staging_path=config["staging"]["VisaMapStaging"],
+        output_path=config["staging"]["VisaMapStaging"],
     )
 
     task = "stage_port_map"
@@ -135,7 +135,7 @@ with DAG(**config["dag"]) as dag:
         runner=config["s3"]["runner"],
         input_path=config["input"]["InputPath"],
         input_file=config["input"]["PortMapInput"],
-        staging_path=config["staging"]["PortMapStaging"],
+        output_path=config["staging"]["PortMapStaging"],
     )
 
     # Remove the cluster

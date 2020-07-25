@@ -15,7 +15,7 @@ if __name__ == "__main__":
     task = sys.argv[1]
     input_path = sys.argv[2]
     input_file = sys.argv[3]
-    staging_path = sys.argv[4]
+    output_path = sys.argv[4]
 
     log.info("Running Spark job for task {}".format(task))
     log.info("Path to input files for task {} is {}".format(task, input_path))
@@ -35,7 +35,7 @@ if __name__ == "__main__":
             df=immigration_clean,
             partition_col="date_file_added",
             num_partitions=20,
-            out_path=staging_path,
+            out_path=output_path,
         )
 
     elif task == "stage_airport_codes":
@@ -52,7 +52,7 @@ if __name__ == "__main__":
             df=airport_codes_clean,
             partition_col="ident",
             num_partitions=20,
-            out_path=staging_path,
+            out_path=output_path,
         )
 
     elif task == "stage_cities":
@@ -69,7 +69,7 @@ if __name__ == "__main__":
             df=cities_clean,
             partition_col="city",
             num_partitions=20,
-            out_path=staging_path,
+            out_path=output_path,
         )
 
     elif task == "stage_cit_res_map":
@@ -86,7 +86,7 @@ if __name__ == "__main__":
             df=cit_res_map_clean,
             partition_col="lookup_value",
             num_partitions=1,
-            out_path=staging_path,
+            out_path=output_path,
         )
 
     elif task == "stage_mode_map":
@@ -103,7 +103,7 @@ if __name__ == "__main__":
             df=mode_map_clean,
             partition_col="lookup_value",
             num_partitions=1,
-            out_path=staging_path,
+            out_path=output_path,
         )
 
     elif task == "stage_state_map":
@@ -120,7 +120,7 @@ if __name__ == "__main__":
             df=state_map_clean,
             partition_col="lookup_value",
             num_partitions=1,
-            out_path=staging_path,
+            out_path=output_path,
         )
 
     elif task == "stage_visa_map":
@@ -137,7 +137,7 @@ if __name__ == "__main__":
             df=visa_map_clean,
             partition_col="lookup_value",
             num_partitions=1,
-            out_path=staging_path,
+            out_path=output_path,
         )
 
     elif task == "stage_port_map":
@@ -154,7 +154,7 @@ if __name__ == "__main__":
             df=port_map_clean,
             partition_col="port",
             num_partitions=1,
-            out_path=staging_path,
+            out_path=output_path,
         )
 
     spark.stop()
