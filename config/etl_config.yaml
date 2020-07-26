@@ -47,7 +47,7 @@ emr:
     - Name: "Install_Dependencies"
       ScriptBootstrapAction:
         Path: "s3://immigration-data-etl/bootstrap/install_dependencies.sh"
-  StepConcurrencyLevel: 2
+  StepConcurrencyLevel: 1
 
 s3:
 
@@ -99,3 +99,15 @@ staging:
   StateMapStaging: "s3://immigration-data-etl/staging-tables/state_staging"
   VisaMapStaging: "s3://immigration-data-etl/staging-tables/visa_staging"
   PortMapStaging: "s3://immigration-data-etl/staging-tables/port_staging"
+
+adm:
+
+  # Config for ADM paths
+  Immigration: "s3://immigration-data-etl/adm/fact_immigration"
+  Airport: "s3://immigration-data-etl/adm/dim_airport_codes"
+  Cities: "s3://immigration-data-etl/adm/dim_city_demos"
+  CitResMap: "s3://immigration-data-etl/adm/dim_cit_res"
+  ModeMap: "s3://immigration-data-etl/adm/dim_mode"
+  StateMap: "s3://immigration-data-etl/adm/dim_state"
+  VisaMap: "s3://immigration-data-etl/adm/dim_visa"
+  PortMap: "s3://immigration-data-etl/adm/dim_port"

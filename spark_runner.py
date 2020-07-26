@@ -1,10 +1,8 @@
 import sys
-from src.stage_tables.staging_helpers import (
-    read_input_data,
-    profile_data,
-    clean_data,
-    write_to_staging,
-)
+from src.stage_tables.staging_helpers import read_input_data, profile_data
+from src.create_facts.create_facts_helpers import *
+from src.create_dims.create_dims_helpers import *
+from utils.data_processing import *
 from pyspark.sql import SparkSession
 from utils.logging_framework import log
 
@@ -15,11 +13,13 @@ if __name__ == "__main__":
     task = sys.argv[1]
     input_path = sys.argv[2]
     input_file = sys.argv[3]
-    output_path = sys.argv[4]
+    staging_path = sys.argv[4]
+    adm_path = sys.argv[4]
 
     log.info("Running Spark job for task {}".format(task))
     log.info("Path to input files for task {} is {}".format(task, input_path))
     log.info("Input file name for task {} is {}".format(task, input_file))
+    log.info("ADM path passed for task {} is {}".format(task, adm_path))
 
     if task == "stage_immigration":
 
@@ -29,13 +29,11 @@ if __name__ == "__main__":
 
         profile_data(staging_immigration_data, "Immigration Data")
 
-        immigration_clean = clean_data(df=staging_immigration_data, task=task)
-
-        write_to_staging(
-            df=immigration_clean,
+        write_to_s3(
+            df=staging_immigration_data,
             partition_col="date_file_added",
             num_partitions=20,
-            out_path=output_path,
+            out_path=staging_path,
         )
 
     elif task == "stage_airport_codes":
@@ -46,13 +44,11 @@ if __name__ == "__main__":
 
         profile_data(staging_airport_codes, "Airport Codes")
 
-        airport_codes_clean = clean_data(df=staging_airport_codes, task=task)
-
-        write_to_staging(
-            df=airport_codes_clean,
+        write_to_s3(
+            df=staging_airport_codes,
             partition_col="ident",
             num_partitions=20,
-            out_path=output_path,
+            out_path=staging_path,
         )
 
     elif task == "stage_cities":
@@ -63,13 +59,11 @@ if __name__ == "__main__":
 
         profile_data(staging_cities, "Cities")
 
-        cities_clean = clean_data(df=staging_cities, task=task)
-
-        write_to_staging(
-            df=cities_clean,
+        write_to_s3(
+            df=staging_cities,
             partition_col="city",
             num_partitions=20,
-            out_path=output_path,
+            out_path=staging_path,
         )
 
     elif task == "stage_cit_res_map":
@@ -80,13 +74,11 @@ if __name__ == "__main__":
 
         profile_data(staging_cit_res_map, "City and res map")
 
-        cit_res_map_clean = clean_data(df=staging_cit_res_map, task=task)
-
-        write_to_staging(
-            df=cit_res_map_clean,
+        write_to_s3(
+            df=staging_cit_res_map,
             partition_col="lookup_value",
             num_partitions=1,
-            out_path=output_path,
+            out_path=staging_path,
         )
 
     elif task == "stage_mode_map":
@@ -97,13 +89,11 @@ if __name__ == "__main__":
 
         profile_data(staging_mode_map, "Mode map")
 
-        mode_map_clean = clean_data(df=staging_mode_map, task=task)
-
-        write_to_staging(
-            df=mode_map_clean,
+        write_to_s3(
+            df=staging_mode_map,
             partition_col="lookup_value",
             num_partitions=1,
-            out_path=output_path,
+            out_path=staging_path,
         )
 
     elif task == "stage_state_map":
@@ -114,13 +104,11 @@ if __name__ == "__main__":
 
         profile_data(staging_state_map, "State map")
 
-        state_map_clean = clean_data(df=staging_state_map, task=task)
-
-        write_to_staging(
-            df=state_map_clean,
+        write_to_s3(
+            df=staging_state_map,
             partition_col="lookup_value",
             num_partitions=1,
-            out_path=output_path,
+            out_path=staging_path,
         )
 
     elif task == "stage_visa_map":
@@ -131,13 +119,11 @@ if __name__ == "__main__":
 
         profile_data(staging_visa_map, "Visa map")
 
-        visa_map_clean = clean_data(df=staging_visa_map, task=task)
-
-        write_to_staging(
-            df=visa_map_clean,
+        write_to_s3(
+            df=staging_visa_map,
             partition_col="lookup_value",
             num_partitions=1,
-            out_path=output_path,
+            out_path=staging_path,
         )
 
     elif task == "stage_port_map":
@@ -148,13 +134,112 @@ if __name__ == "__main__":
 
         profile_data(staging_port_map, "Visa map")
 
-        port_map_clean = clean_data(df=staging_port_map, task=task)
-
-        write_to_staging(
-            df=port_map_clean,
+        write_to_s3(
+            df=staging_port_map,
             partition_col="port",
             num_partitions=1,
-            out_path=output_path,
+            out_path=staging_path,
+        )
+
+    elif task == "create_fact_table":
+
+        immigration_fact = read_staging_data(spark=spark, path=staging_path)
+
+        immigration_fact = clean_immigration(immigration_fact)
+
+        write_to_s3(
+            df=immigration_fact,
+            partition_col="date_file_added",
+            num_partitions=20,
+            out_path=adm_path,
+        )
+
+    elif task == "create_dim_airport_codes":
+
+        airport_codes_dim = read_staging_data(spark=spark, path=staging_path)
+
+        airport_codes_dim = clean_airport_codes_dim(airport_codes_dim)
+
+        write_to_s3(
+            df=airport_codes_dim,
+            partition_col="ident",
+            num_partitions=20,
+            out_path=adm_path,
+        )
+
+    elif task == "create_dim_city_demos":
+
+        city_demos_dim = read_staging_data(spark=spark, path=staging_path)
+
+        city_demos_dim = clean_cities_dim(city_demos_dim)
+
+        write_to_s3(
+            df=city_demos_dim,
+            partition_col="city",
+            num_partitions=20,
+            out_path=adm_path,
+        )
+
+    elif task == "create_dim_city_res":
+
+        city_res_dim = read_staging_data(spark=spark, path=staging_path)
+
+        city_demos_dim = clean_other_dims(city_res_dim)
+
+        write_to_s3(
+            df=city_res_dim,
+            partition_col="lookup_value",
+            num_partitions=1,
+            out_path=adm_path,
+        )
+
+    elif task == "create_mode_dim":
+
+        mode_dim = read_staging_data(spark=spark, path=staging_path)
+
+        mode_dim = clean_other_dims(mode_dim)
+
+        write_to_s3(
+            df=mode_dim,
+            partition_col="lookup_value",
+            num_partitions=1,
+            out_path=adm_path,
+        )
+
+    elif task == "create_state_dim":
+
+        state_dim = read_staging_data(spark=spark, path=staging_path)
+
+        state_dim = clean_other_dims(state_dim)
+
+        write_to_s3(
+            df=state_dim,
+            partition_col="lookup_value",
+            num_partitions=1,
+            out_path=adm_path,
+        )
+
+    elif task == "create_visa_dim":
+
+        visa_dim = read_staging_data(spark=spark, path=staging_path)
+
+        visa_dim = clean_other_dims(visa_dim)
+
+        write_to_s3(
+            df=visa_dim,
+            partition_col="lookup_value",
+            num_partitions=1,
+            out_path=adm_path,
+        )
+
+    elif task == "create_port_dim":
+
+        port_dim = read_staging_data(spark=spark, path=staging_path)
+
+        port_dim = clean_port_map_dim(port_dim)
+
+        write_to_s3(
+            df=port_dim, partition_col="port", num_partitions=1, out_path=adm_path
         )
 
     spark.stop()

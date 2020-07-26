@@ -31,7 +31,7 @@ with DAG(**config["dag"]) as dag:
     create_egg = BashOperator(
         task_id="create_app_egg",
         bash_command="cd /home/ubuntu/immigration_code && python /home/ubuntu/immigration_code/setup.py bdist_egg",
-        run_as_user='airflow'
+        run_as_user="airflow",
     )
 
     # Copy application files to s3
@@ -55,9 +55,9 @@ with DAG(**config["dag"]) as dag:
         task=task,
         path_to_egg=config["s3"]["egg"],
         runner=config["s3"]["runner"],
+        staging_path=config["staging"]["ImmigrationStaging"],
         input_path=config["input"]["InputPath"],
         input_file=config["input"]["ImmigrationInput"],
-        output_path=config["staging"]["ImmigrationStaging"],
     )
 
     # Stage the airport codes data
@@ -67,9 +67,9 @@ with DAG(**config["dag"]) as dag:
         task=task,
         path_to_egg=config["s3"]["egg"],
         runner=config["s3"]["runner"],
+        staging_path=config["staging"]["AirportStaging"],
         input_path=config["input"]["InputPath"],
         input_file=config["input"]["AirportCodesInput"],
-        output_path=config["staging"]["AirportStaging"],
     )
 
     task = "stage_cities"
@@ -78,9 +78,9 @@ with DAG(**config["dag"]) as dag:
         task=task,
         path_to_egg=config["s3"]["egg"],
         runner=config["s3"]["runner"],
+        staging_path=config["staging"]["CitiesStaging"],
         input_path=config["input"]["InputPath"],
         input_file=config["input"]["CitiesInput"],
-        output_path=config["staging"]["CitiesStaging"],
     )
 
     task = "stage_cit_res_map"
@@ -89,9 +89,9 @@ with DAG(**config["dag"]) as dag:
         task=task,
         path_to_egg=config["s3"]["egg"],
         runner=config["s3"]["runner"],
+        staging_path=config["staging"]["CitResMapStaging"],
         input_path=config["input"]["InputPath"],
         input_file=config["input"]["CitResMapInput"],
-        output_path=config["staging"]["CitResMapStaging"],
     )
 
     task = "stage_mode_map"
@@ -100,9 +100,9 @@ with DAG(**config["dag"]) as dag:
         task=task,
         path_to_egg=config["s3"]["egg"],
         runner=config["s3"]["runner"],
+        staging_path=config["staging"]["ModeMapStaging"],
         input_path=config["input"]["InputPath"],
         input_file=config["input"]["ModeMapInput"],
-        output_path=config["staging"]["ModeMapStaging"],
     )
 
     task = "stage_state_map"
@@ -111,9 +111,9 @@ with DAG(**config["dag"]) as dag:
         task=task,
         path_to_egg=config["s3"]["egg"],
         runner=config["s3"]["runner"],
+        staging_path=config["staging"]["StateMapStaging"],
         input_path=config["input"]["InputPath"],
         input_file=config["input"]["StateMapInput"],
-        output_path=config["staging"]["StateMapStaging"],
     )
 
     task = "stage_visa_map"
@@ -122,9 +122,9 @@ with DAG(**config["dag"]) as dag:
         task=task,
         path_to_egg=config["s3"]["egg"],
         runner=config["s3"]["runner"],
+        staging_path=config["staging"]["VisaMapStaging"],
         input_path=config["input"]["InputPath"],
         input_file=config["input"]["VisaMapInput"],
-        output_path=config["staging"]["VisaMapStaging"],
     )
 
     task = "stage_port_map"
@@ -133,9 +133,89 @@ with DAG(**config["dag"]) as dag:
         task=task,
         path_to_egg=config["s3"]["egg"],
         runner=config["s3"]["runner"],
+        staging_path=config["staging"]["PortMapStaging"],
         input_path=config["input"]["InputPath"],
         input_file=config["input"]["PortMapInput"],
-        output_path=config["staging"]["PortMapStaging"],
+    )
+
+    task = "create_fact_table"
+
+    create_fact_table, create_fact_table_sensor = add_spark_step(
+        task=task,
+        path_to_egg=config["s3"]["egg"],
+        runner=config["s3"]["runner"],
+        staging_path=config["staging"]["ImmigrationStaging"],
+        adm_path=config["adm"]["Immigration"],
+    )
+
+    task = "create_dim_airport_codes"
+
+    create_dim_airport_codes, create_dim_airport_codes_sensor = add_spark_step(
+        task=task,
+        path_to_egg=config["s3"]["egg"],
+        runner=config["s3"]["runner"],
+        staging_path=config["staging"]["AirportStaging"],
+        adm_path=config["adm"]["Airport"],
+    )
+
+    task = "create_dim_city_demos"
+
+    create_dim_city_demos, create_dim_city_demos_sensor = add_spark_step(
+        task=task,
+        path_to_egg=config["s3"]["egg"],
+        runner=config["s3"]["runner"],
+        staging_path=config["staging"]["CitiesStaging"],
+        adm_path=config["adm"]["Cities"],
+    )
+
+    task = "create_dim_city_res"
+
+    create_dim_city_res, create_dim_city_res_sensor = add_spark_step(
+        task=task,
+        path_to_egg=config["s3"]["egg"],
+        runner=config["s3"]["runner"],
+        staging_path=config["staging"]["CitResMapStaging"],
+        adm_path=config["adm"]["CitResMap"],
+    )
+
+    task = "create_mode_dim"
+
+    create_dim_mode, create_dim_mode_sensor = add_spark_step(
+        task=task,
+        path_to_egg=config["s3"]["egg"],
+        runner=config["s3"]["runner"],
+        staging_path=config["staging"]["ModeMapStaging"],
+        adm_path=config["adm"]["ModeMap"],
+    )
+
+    task = "create_state_dim"
+
+    create_dim_state, create_dim_state_sensor = add_spark_step(
+        task=task,
+        path_to_egg=config["s3"]["egg"],
+        runner=config["s3"]["runner"],
+        staging_path=config["staging"]["StateMapStaging"],
+        adm_path=config["adm"]["StateMap"],
+    )
+
+    task = "create_visa_dim"
+
+    create_dim_visa, create_dim_visa_sensor = add_spark_step(
+        task=task,
+        path_to_egg=config["s3"]["egg"],
+        runner=config["s3"]["runner"],
+        staging_path=config["staging"]["VisaMapStaging"],
+        adm_path=config["adm"]["VisaMap"],
+    )
+
+    task = "create_port_dim"
+
+    create_dim_port, create_dim_port_sensor = add_spark_step(
+        task=task,
+        path_to_egg=config["s3"]["egg"],
+        runner=config["s3"]["runner"],
+        staging_path=config["staging"]["PortMapStaging"],
+        adm_path=config["adm"]["PortMap"],
     )
 
     # Remove the cluster
@@ -146,11 +226,28 @@ with DAG(**config["dag"]) as dag:
         on_failure_callback=notify_email,
     )
 
-    create_egg >> upload_code >> cluster_creator >> stage_immigration >> immigration_step_sensor >> cluster_remover
-    cluster_creator >> stage_airport_codes >> airport_codes_step_sensor >> cluster_remover
-    cluster_creator >> stage_cities >> cities_step_sensor >> cluster_remover
-    cluster_creator >> stage_cit_res_map >> cit_res_map_step_sensor >> cluster_remover
-    cluster_creator >> stage_mode_map >> mode_map_step_sensor >> cluster_remover
-    cluster_creator >> stage_state_map >> state_map_step_sensor >> cluster_remover
-    cluster_creator >> stage_visa_map >> visa_map_step_sensor >> cluster_remover
-    cluster_creator >> stage_port_map >> port_map_step_sensor >> cluster_remover
+    create_egg >> upload_code >> cluster_creator
+
+    cluster_creator >> stage_immigration >> immigration_step_sensor >> create_fact_table >> \
+        create_fact_table_sensor >> cluster_remover
+
+    cluster_creator >> stage_airport_codes >> airport_codes_step_sensor >> create_dim_airport_codes >> \
+        create_dim_airport_codes_sensor >> cluster_remover
+
+    cluster_creator >> stage_cities >> cities_step_sensor >> create_dim_city_demos >> \
+        create_dim_city_demos_sensor >> cluster_remover
+
+    cluster_creator >> stage_cit_res_map >> cit_res_map_step_sensor >> create_dim_city_res >> \
+        create_dim_city_res_sensor >> cluster_remover
+
+    cluster_creator >> stage_mode_map >> mode_map_step_sensor >> create_dim_mode >> \
+        create_dim_mode_sensor >> cluster_remover
+
+    cluster_creator >> stage_state_map >> state_map_step_sensor >> create_dim_state >> \
+        create_dim_state_sensor >> cluster_remover
+
+    cluster_creator >> stage_visa_map >> visa_map_step_sensor >> create_dim_visa >> \
+        create_dim_visa_sensor >> cluster_remover
+
+    cluster_creator >> stage_port_map >> port_map_step_sensor >> create_dim_port >> \
+        create_dim_port_sensor >> cluster_remover

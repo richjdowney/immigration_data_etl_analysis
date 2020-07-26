@@ -5,7 +5,7 @@ from utils.send_email import notify_email
 from utils.logging_framework import log
 
 
-def add_spark_step(task, path_to_egg, runner, input_path, input_file, output_path):
+def add_spark_step(task, path_to_egg, runner, staging_path, **kwargs):
 
     """ Function to add a Spark step to emr
 
@@ -17,14 +17,14 @@ def add_spark_step(task, path_to_egg, runner, input_path, input_file, output_pat
         Path to the egg file containing the main Spark application
     runner : str
         Name of the main runner file
-    input_path : str
-        Path to the input data source
-    input_file : str
-        Name of the input data source file
-    output_path : str
+    staging_path : str
         Name of the path for staging tables
 
     """
+
+    adm_path = kwargs.get('adm_path', None)
+    input_path = kwargs.get('input_path', None)
+    input_file = kwargs.get('input_file', None)
 
     # Add the Spark step
     spark_step = add_step_to_emr(
@@ -33,7 +33,9 @@ def add_spark_step(task, path_to_egg, runner, input_path, input_file, output_pat
         runner=runner,
         input_data_path=input_path,
         input_file_name=input_file,
-        output_path=output_path,
+        staging_path=staging_path,
+        adm_path=adm_path
+
     )
 
     step_adder = EmrAddStepsOperator(
