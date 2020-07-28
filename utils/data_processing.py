@@ -1,8 +1,10 @@
 from pyspark.sql import functions as F
 from utils.logging_framework import log
+from pyspark.sql import DataFrame as SparkDataFrame
+from pyspark.sql import SparkSession
 
 
-def clean_mapping(df):
+def clean_mapping(df: SparkDataFrame) -> SparkDataFrame:
     """Function to split the column by "=" and remove single quotes.  Common cleaning
     steps required across the mapping files
 
@@ -30,13 +32,15 @@ def clean_mapping(df):
     return df
 
 
-def rename_cols(df, mapping):
+def rename_cols(df: SparkDataFrame, mapping: dict) -> SparkDataFrame:
     """Function to rename the multiple columns in a DataFrame:
 
     Parameters
     ----------
     df : pyspark.sql.DataFrame
         Spark DataFrame to clean
+    mapping: dict
+        Dictionary containing the rename mapping
 
     Returns
     ----------
@@ -47,8 +51,15 @@ def rename_cols(df, mapping):
 
     """
 
-    def getlist(dict):
-        """ Function gets list of columns to rename from the mapping file"""
+    def getlist(dict: dict) -> SparkDataFrame:
+        """ Function gets list of columns to rename from the mapping file
+
+        Parameters
+        ----------
+        dict : dict
+            dictionary mapping of columns to rename
+
+        """
         list = []
         for key in dict.keys():
             list.append(key)
@@ -65,7 +76,7 @@ def rename_cols(df, mapping):
     return df
 
 
-def immigration_treat_missing(df):
+def immigration_treat_missing(df: SparkDataFrame) -> SparkDataFrame:
     """Function to treat missing data in the immigration data:
 
     Parameters
@@ -167,11 +178,27 @@ def immigration_treat_missing(df):
         ),
     )
 
+    # Replace missing city with X
+    df = df.withColumn(
+        "city",
+        F.when(F.col("city").isNull(), "X").otherwise(
+            F.col("city")
+        ),
+    )
+
+    # Replace missing 'birth_year' with 9999
+    df = df.withColumn(
+        "birth_year",
+        F.when(F.col("birth_year").isNull(), "9999").otherwise(
+            F.col("birth_year")
+        ),
+    )
+
     return df
 
 
-def airport_treat_missing(df):
-    """Function to tret missing data in the airport data:
+def airport_treat_missing(df: SparkDataFrame) -> SparkDataFrame:
+    """Function to treat missing data in the airport data:
 
     Parameters
     ----------
@@ -219,7 +246,7 @@ def airport_treat_missing(df):
     return df
 
 
-def convert_sas_dates(df, cols):
+def convert_sas_dates(df: SparkDataFrame, cols: list) -> SparkDataFrame:
     """Function to convert SAS date columns to date:
 
     Parameters
@@ -244,7 +271,7 @@ def convert_sas_dates(df, cols):
     return df
 
 
-def cast_vars(df, cols, dtype):
+def cast_vars(df: SparkDataFrame, cols: list, dtype: str) -> SparkDataFrame:
     """Function to cast columns to a new data type:
 
     Parameters
@@ -253,6 +280,8 @@ def cast_vars(df, cols, dtype):
         Spark DataFrame to clean
     cols : list
         List of columns to cast
+    dtype : str
+        String containing the data type to cast to
 
     Returns
     ----------
@@ -267,7 +296,7 @@ def cast_vars(df, cols, dtype):
     return df
 
 
-def convert_dates(df, col, dt_format):
+def convert_dates(df: SparkDataFrame, col: str, dt_format: str) -> SparkDataFrame:
     """Function to cast columns to int:
 
     Parameters
@@ -291,7 +320,7 @@ def convert_dates(df, col, dt_format):
     return df
 
 
-def write_to_s3(df, partition_col, num_partitions, out_path):
+def write_to_s3(df: SparkDataFrame, partition_col: str, num_partitions: int, out_path: str) -> None:
     """Function to write DataFrames to location on s3
 
     Parameters
@@ -311,7 +340,7 @@ def write_to_s3(df, partition_col, num_partitions, out_path):
     df.write.parquet(out_path, mode="overwrite")
 
 
-def read_staging_data(spark, path):
+def read_staging_data(spark: SparkSession, path: str) -> SparkDataFrame:
     """
     Function to read data from staging
 
@@ -330,6 +359,30 @@ def read_staging_data(spark, path):
     """
 
     log.info("Reading staging data from {}".format(path))
+    df = spark.read.parquet(path)
+
+    return df
+
+
+def load_parquet(spark: SparkSession, path: str) -> SparkDataFrame:
+    """
+    Function to load parquet
+
+    Parameters
+    ----------
+    spark : SparkSession
+        Current Spark session
+    path : str
+        Path to staging data on s3
+
+    Returns
+    --------
+    df : pyspark.sql.DataFrame
+        Spark DataFrame containing the staging data
+
+    """
+
+    log.info("Reading parquet from {}".format(path))
     df = spark.read.parquet(path)
 
     return df

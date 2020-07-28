@@ -1,8 +1,9 @@
 from utils.data_processing import *
 from pyspark.sql import functions as F
+from pyspark.sql import DataFrame as SparkDataFrame
 
 
-def clean_cities_dim(df):
+def clean_cities_dim(df: SparkDataFrame) -> SparkDataFrame:
     """Function to clean the cities dimension table, specifically:
 
         *  Rename columns
@@ -30,14 +31,14 @@ def clean_cities_dim(df):
             [
                 "City",
                 "State",
-                "Median Age",
-                "Male Population",
-                "Female Population",
-                "Total Population",
-                "Number of Veterans",
+                "Median_Age",
+                "Male_Population",
+                "Female_Population",
+                "Total_Population",
+                "Number_of_Veterans",
                 "Foreign-born",
-                "Average Household Size",
-                "State Code",
+                "Average_Household_Size",
+                "State_Code",
                 "Race",
             ],
             [
@@ -77,6 +78,7 @@ def clean_cities_dim(df):
         "female_population",
         "num_foreign_born",
         "avg_hhd_size",
+        "num_veterans"
     ]
 
     for c in cols_to_zero_replace:
@@ -85,7 +87,7 @@ def clean_cities_dim(df):
     return df
 
 
-def clean_airport_codes_dim(df):
+def clean_airport_codes_dim(df: SparkDataFrame) -> SparkDataFrame:
     """Function to clean the airport codes dimension table, specifically:
 
         *  Cast columns to appropriate data types
@@ -119,7 +121,7 @@ def clean_airport_codes_dim(df):
     return df
 
 
-def clean_port_map_dim(df):
+def clean_port_map_dim(df: SparkDataFrame) -> SparkDataFrame:
     """Function to clean the port mapping dimension table, specifically:
 
         *  Remove quotes from string columns
@@ -152,10 +154,12 @@ def clean_port_map_dim(df):
     # Drop unwanted columns
     df = df.drop("_c2", "city_state")
 
+    df = df.withColumn('state', F.when(F.col('state').isNull(), 'XX').otherwise(F.col('state')))
+
     return df
 
 
-def clean_other_dims(df):
+def clean_other_dims(df: SparkDataFrame) -> SparkDataFrame:
     """Function to clean the 'other' dimension tables that have common cleaning steps
     (city_res mapping, mode mapping, state mapping and visa mapping, specifically:
 

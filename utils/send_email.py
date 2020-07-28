@@ -1,7 +1,7 @@
 from airflow.utils.email import send_email
 
 
-def notify_email(context, **kwargs):
+def notify_email(context) -> None:
     """Send custom email alerts."""
 
     # email title.

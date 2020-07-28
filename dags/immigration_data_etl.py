@@ -218,6 +218,82 @@ with DAG(**config["dag"]) as dag:
         adm_path=config["adm"]["PortMap"],
     )
 
+    task = "fact_immigration_qc"
+
+    fact_immigration_qc, fact_immigration_qc_sensor = add_spark_step(
+        task=task,
+        path_to_egg=config["s3"]["egg"],
+        runner=config["s3"]["runner"],
+        staging_path=config["staging"]["ImmigrationStaging"],
+        adm_path=config["adm"]["Immigration"],
+    )
+
+    task = "dim_airport_codes_qc"
+
+    dim_airport_codes_qc, dim_airport_codes_qc_sensor = add_spark_step(
+        task=task,
+        path_to_egg=config["s3"]["egg"],
+        runner=config["s3"]["runner"],
+        staging_path=config["staging"]["AirportStaging"],
+        adm_path=config["adm"]["Airport"],
+    )
+
+    task = "dim_city_demos_qc"
+
+    dim_city_qc, dim_city_qc_sensor = add_spark_step(
+        task=task,
+        path_to_egg=config["s3"]["egg"],
+        runner=config["s3"]["runner"],
+        staging_path=config["staging"]["CitiesStaging"],
+        adm_path=config["adm"]["Cities"],
+    )
+
+    task = "dim_cit_res_qc"
+
+    dim_cit_res_qc, dim_cit_res_qc_sensor = add_spark_step(
+        task=task,
+        path_to_egg=config["s3"]["egg"],
+        runner=config["s3"]["runner"],
+        staging_path=config["staging"]["CitResMapStaging"],
+        adm_path=config["adm"]["CitResMap"],
+    )
+
+    task = "dim_mode_qc"
+
+    dim_mode_qc, dim_mode_qc_sensor = add_spark_step(
+        task=task,
+        path_to_egg=config["s3"]["egg"],
+        runner=config["s3"]["runner"],
+        staging_path=config["staging"]["ModeMapStaging"],
+        adm_path=config["adm"]["ModeMap"],
+    )
+
+    task = "dim_state_qc"
+
+    dim_state_qc, dim_state_qc_sensor = add_spark_step(
+        task=task,
+        path_to_egg=config["s3"]["egg"],
+        runner=config["s3"]["runner"],
+        staging_path=config["staging"]["StateMapStaging"],
+        adm_path=config["adm"]["StateMap"],
+    )
+
+    dim_visa_qc, dim_visa_qc_sensor = add_spark_step(
+        task=task,
+        path_to_egg=config["s3"]["egg"],
+        runner=config["s3"]["runner"],
+        staging_path=config["staging"]["VisaMapStaging"],
+        adm_path=config["adm"]["VisaMap"],
+    )
+
+    dim_port_qc, dim_port_qc_sensor = add_spark_step(
+        task=task,
+        path_to_egg=config["s3"]["egg"],
+        runner=config["s3"]["runner"],
+        staging_path=config["staging"]["PortMapStaging"],
+        adm_path=config["adm"]["PortMap"],
+    )
+
     # Remove the cluster
     cluster_remover = EmrTerminateJobFlowOperator(
         task_id="remove_cluster",
@@ -229,25 +305,33 @@ with DAG(**config["dag"]) as dag:
     create_egg >> upload_code >> cluster_creator
 
     cluster_creator >> stage_immigration >> immigration_step_sensor >> create_fact_table >> \
-        create_fact_table_sensor >> cluster_remover
+        create_fact_table_sensor >> fact_immigration_qc >> fact_immigration_qc_sensor \
+        >> cluster_remover
 
     cluster_creator >> stage_airport_codes >> airport_codes_step_sensor >> create_dim_airport_codes >> \
-        create_dim_airport_codes_sensor >> cluster_remover
+        create_dim_airport_codes_sensor >> dim_airport_codes_qc >> dim_airport_codes_qc_sensor  \
+        >> cluster_remover
 
     cluster_creator >> stage_cities >> cities_step_sensor >> create_dim_city_demos >> \
-        create_dim_city_demos_sensor >> cluster_remover
+        create_dim_city_demos_sensor >> dim_city_qc >> dim_city_qc_sensor \
+        >> cluster_remover
 
     cluster_creator >> stage_cit_res_map >> cit_res_map_step_sensor >> create_dim_city_res >> \
-        create_dim_city_res_sensor >> cluster_remover
+        create_dim_city_res_sensor >> dim_cit_res_qc >> dim_cit_res_qc_sensor \
+        >> cluster_remover
 
     cluster_creator >> stage_mode_map >> mode_map_step_sensor >> create_dim_mode >> \
-        create_dim_mode_sensor >> cluster_remover
+        create_dim_mode_sensor >> dim_mode_qc >> dim_mode_qc_sensor \
+        >> cluster_remover
 
     cluster_creator >> stage_state_map >> state_map_step_sensor >> create_dim_state >> \
-        create_dim_state_sensor >> cluster_remover
+        create_dim_state_sensor >> dim_state_qc >> dim_state_qc_sensor \
+        >> cluster_remover
 
     cluster_creator >> stage_visa_map >> visa_map_step_sensor >> create_dim_visa >> \
-        create_dim_visa_sensor >> cluster_remover
+        create_dim_visa_sensor >> dim_visa_qc >> dim_visa_qc_sensor \
+        >> cluster_remover
 
     cluster_creator >> stage_port_map >> port_map_step_sensor >> create_dim_port >> \
-        create_dim_port_sensor >> cluster_remover
+        create_dim_port_sensor >> dim_port_qc >> dim_port_qc_sensor >> \
+        cluster_remover

@@ -30,7 +30,7 @@ logging.basicConfig(level=LOGGING_LEVEL, format=FMT, datefmt=DT_FMT)
 log = logging
 
 
-def format_title(msg):
+def format_title(msg: str) -> str:
     """Function to format a message title for logging
 
         Parameters

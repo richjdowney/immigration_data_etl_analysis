@@ -1,10 +1,11 @@
-from utils.logging_framework import log
 from pyspark.sql.types import StringType, IntegerType, StructField, StructType
 from utils.data_processing import *
 import boto3
+from pyspark.sql import SparkSession
+from pyspark.sql import DataFrame as SparkDataFrame
 
 
-def _create_immigration_df(spark):
+def _create_immigration_df(spark: SparkSession) -> SparkDataFrame:
     """Function to specify the schema for immigration data and
        return an empty DataFrame
     """
@@ -46,7 +47,7 @@ def _create_immigration_df(spark):
     return df
 
 
-def read_input_data(spark, input_data_path, source, task):
+def read_input_data(spark: SparkSession, input_data_path: str, source: str, task: str) -> SparkDataFrame:
     """Function to read the input data into Spark
 
     Parameters
@@ -102,6 +103,9 @@ def read_input_data(spark, input_data_path, source, task):
             "{}{}".format(input_data_path, source), header=True, format="csv", sep=";"
         )
 
+        # Replace whitespace in column names
+        df = df.select([F.col(col).alias(col.replace(' ', '_')) for col in df.columns])
+
     elif task == "stage_cit_res_map":
         df = spark.read.load(
             "{}{}".format(input_data_path, source), header=True, format="csv", sep=","
@@ -133,7 +137,7 @@ def read_input_data(spark, input_data_path, source, task):
     return df
 
 
-def profile_data(df, df_desc):
+def profile_data(df: SparkDataFrame, df_desc: str) -> None:
     """Function to profile a Spark DataFrame printing the following to the output:
 
         *  Top 10 records

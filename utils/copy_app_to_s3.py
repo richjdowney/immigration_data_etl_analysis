@@ -2,7 +2,7 @@ from utils.aws_utils import load_file_to_s3
 from utils.logging_framework import log
 
 
-def copy_app_to_s3(*op_args):
+def copy_app_to_s3(*op_args) -> log:
     """Runner to copy application files to s3
 
     Parameters

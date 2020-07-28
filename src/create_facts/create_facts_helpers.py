@@ -1,7 +1,8 @@
 from utils.data_processing import *
+from pyspark.sql import DataFrame as SparkDataFrame
 
 
-def clean_immigration(df):
+def clean_immigration(df: SparkDataFrame) -> SparkDataFrame:
     """Function to clean the immigration data, specifically:
 
         *  Rename columns

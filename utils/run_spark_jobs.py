@@ -3,9 +3,12 @@ from airflow.contrib.operators.emr_add_steps_operator import EmrAddStepsOperator
 from utils.aws_utils import add_step_to_emr
 from utils.send_email import notify_email
 from utils.logging_framework import log
+from typing import Tuple
 
 
-def add_spark_step(task, path_to_egg, runner, staging_path, **kwargs):
+def add_spark_step(
+    task: str, path_to_egg: str, runner: str, staging_path: str, **kwargs
+) -> Tuple[EmrAddStepsOperator, EmrStepSensor]:
 
     """ Function to add a Spark step to emr
 
@@ -22,9 +25,9 @@ def add_spark_step(task, path_to_egg, runner, staging_path, **kwargs):
 
     """
 
-    adm_path = kwargs.get('adm_path', None)
-    input_path = kwargs.get('input_path', None)
-    input_file = kwargs.get('input_file', None)
+    adm_path = kwargs.get("adm_path", "dum_path")
+    input_path = kwargs.get("input_path", "dum_path")
+    input_file = kwargs.get("input_file", "dum_path")
 
     # Add the Spark step
     spark_step = add_step_to_emr(
@@ -34,8 +37,7 @@ def add_spark_step(task, path_to_egg, runner, staging_path, **kwargs):
         input_data_path=input_path,
         input_file_name=input_file,
         staging_path=staging_path,
-        adm_path=adm_path
-
+        adm_path=adm_path,
     )
 
     step_adder = EmrAddStepsOperator(
@@ -50,7 +52,9 @@ def add_spark_step(task, path_to_egg, runner, staging_path, **kwargs):
     step_checker = EmrStepSensor(
         task_id="watch_{}".format(task),
         job_flow_id="{{ task_instance.xcom_pull('create_job_flow', key='return_value') }}",
-        step_id="{{{{ task_instance.xcom_pull(task_ids='{}', key='return_value')[0] }}}}".format(step_name),
+        step_id="{{{{ task_instance.xcom_pull(task_ids='{}', key='return_value')[0] }}}}".format(
+            step_name
+        ),
         aws_conn_id="aws_default",
         on_failure_callback=notify_email,
     )
