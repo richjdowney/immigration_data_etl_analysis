@@ -38,6 +38,7 @@ def add_spark_step(
         input_file_name=input_file,
         staging_path=staging_path,
         adm_path=adm_path,
+        execution_date="{{ execution_date }}"
     )
 
     step_adder = EmrAddStepsOperator(
@@ -46,6 +47,7 @@ def add_spark_step(
         aws_conn_id="aws_default",
         steps=spark_step,
         on_failure_callback=notify_email,
+        provide_context=True
     )
 
     step_name = "add_step_{}".format(task)

@@ -1,6 +1,7 @@
 from utils.data_processing import *
 from pyspark.sql import functions as F
 from pyspark.sql import DataFrame as SparkDataFrame
+from utils.logging_framework import log
 
 
 def clean_cities_dim(df: SparkDataFrame) -> SparkDataFrame:
@@ -21,6 +22,8 @@ def clean_cities_dim(df: SparkDataFrame) -> SparkDataFrame:
     df : pyspark.sql.DataFrame
         Spark DataFrame cleaned
     """
+
+    log.info("Cleaning the cities dimension table")
 
     # Drop the count variable
     df = df.drop("count")
@@ -105,6 +108,8 @@ def clean_airport_codes_dim(df: SparkDataFrame) -> SparkDataFrame:
         Spark DataFrame cleaned
     """
 
+    log.info("Cleaning the airport codes dimension table")
+
     # Cast columns to appropriate values
     df = cast_vars(df, ["elevation_ft"], "int")
 
@@ -138,6 +143,8 @@ def clean_port_map_dim(df: SparkDataFrame) -> SparkDataFrame:
         Spark DataFrame cleaned
     """
 
+    log.info("Cleaning the ports dimension table")
+
     # Remove quotes
     df = df.withColumn("port", F.regexp_replace("port", "'", "")).withColumn(
         "city_state", F.regexp_replace("city_state", "'", "")
@@ -159,7 +166,7 @@ def clean_port_map_dim(df: SparkDataFrame) -> SparkDataFrame:
     return df
 
 
-def clean_other_dims(df: SparkDataFrame) -> SparkDataFrame:
+def clean_other_dims(df: SparkDataFrame, df_name: str) -> SparkDataFrame:
     """Function to clean the 'other' dimension tables that have common cleaning steps
     (city_res mapping, mode mapping, state mapping and visa mapping, specifically:
 
@@ -170,6 +177,8 @@ def clean_other_dims(df: SparkDataFrame) -> SparkDataFrame:
     ----------
     df : pyspark.sql.DataFrame
         Spark DataFrame to clean
+    df_name : str
+        Name of the DataFrame being cleaned
 
     Returns
     ----------
@@ -177,6 +186,7 @@ def clean_other_dims(df: SparkDataFrame) -> SparkDataFrame:
         Spark DataFrame cleaned
 
     """
+    log.info("Cleaning the {} dimension table".format(df_name))
 
     # Common cleaning tasks across mapping files
     df = clean_mapping(df)

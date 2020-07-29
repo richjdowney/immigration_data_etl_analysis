@@ -1,5 +1,6 @@
 from pyspark.sql import functions as F
 from pyspark.sql import DataFrame as SparkDataFrame
+from utils.logging_framework import log
 
 
 def data_quality_check_missing(df: SparkDataFrame, df_name: str) -> None:
@@ -18,6 +19,8 @@ def data_quality_check_missing(df: SparkDataFrame, df_name: str) -> None:
         Raises Value Error if any columns have missing values
     """
 
+    log.info("Checking for missing values in DataFrame {}".format(df_name))
+
     # Check file for missing records
     null_missing_counts = df.select(
         [F.count(F.when(F.col(c).isNull(), c)).alias(c) for c in df.columns]
@@ -30,6 +33,8 @@ def data_quality_check_missing(df: SparkDataFrame, df_name: str) -> None:
                 "Data quality check failed, column {} in DataFrame {} "
                 "has missing values".format(col, df_name)
             )
+
+    log.info("No missing values found in DataFrame {}".format(df_name))
 
 
 def data_quality_check_empty_frame(df: SparkDataFrame, df_name: str) -> None:
@@ -48,8 +53,12 @@ def data_quality_check_empty_frame(df: SparkDataFrame, df_name: str) -> None:
         Raises Value Error if DataFrame is empty
     """
 
+    log.info("Checking for records in DataFrame {}".format(df_name))
+
     if df.count() == 0:
         raise ValueError("DataFrame {} is empty".format(df_name))
+
+    log.info("DataFrame {} contains {} rows and {} columns".format(df_name, df.count(), len(df.columns)))
 
 
 def data_quality_check_num_cols(df, df_name, exp_value):
@@ -70,6 +79,8 @@ def data_quality_check_num_cols(df, df_name, exp_value):
         Raises Value Error number of DataFrame columns does not match expected
     """
 
+    log.info("Checking DataFrame {} contains {} columns".format(df_name, exp_value))
+
     num_cols = len(df.columns)
     if num_cols != exp_value:
         raise ValueError(
@@ -77,6 +88,8 @@ def data_quality_check_num_cols(df, df_name, exp_value):
                 df_name, num_cols, exp_value
             )
         )
+
+    log.info("DataFrame {} contains {} columns as expected".format(df_name, exp_value))
 
 
 def data_quality_check_dtypes(df: SparkDataFrame, df_name: str, expected_type_map: dict):
@@ -95,8 +108,8 @@ def data_quality_check_dtypes(df: SparkDataFrame, df_name: str, expected_type_ma
     ------
     ValueError
         Raises Value Error if data types do not match expected
-
     """
+    log.info("Checking data types match expected types for DataFrame {} ".format(df_name))
 
     for col in df.columns:
         actual_dtype = str(df.schema[col].dataType)
@@ -108,3 +121,5 @@ def data_quality_check_dtypes(df: SparkDataFrame, df_name: str, expected_type_ma
                     df_name, col, actual_dtype, expected_dtype
                 )
             )
+
+    log.info("Data types in DataFrame {} match expected types".format(df_name))

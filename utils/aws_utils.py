@@ -4,8 +4,8 @@ from typing import List, Dict
 
 
 def add_step_to_emr(
-    task_id: str, egg: str, runner:str, input_data_path="", input_file_name="",
-        staging_path="", adm_path=""
+    task_id: str, egg: str, runner: str, input_data_path="", input_file_name="",
+        staging_path="", adm_path="", execution_date=""
 ) -> List[Dict]:
     """Function to add a step to emr
 
@@ -25,6 +25,8 @@ def add_step_to_emr(
         name of the path for staging tables
     adm_path : str
         name of the path to the ADM
+    execution_date : str
+        the execution date of the DAG from context
 
     """
 
@@ -45,7 +47,8 @@ def add_step_to_emr(
                     input_data_path,
                     input_file_name,
                     staging_path,
-                    adm_path
+                    adm_path,
+                    execution_date,
                 ],
             },
         }

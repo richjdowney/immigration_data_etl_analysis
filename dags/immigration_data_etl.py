@@ -15,7 +15,6 @@ from utils.run_spark_jobs import add_spark_step
 from utils.logging_framework import log
 from utils.copy_app_to_s3 import copy_app_to_s3
 
-
 # Load the config file
 config = load_yaml(constants.config_path)
 
@@ -278,6 +277,8 @@ with DAG(**config["dag"]) as dag:
         adm_path=config["adm"]["StateMap"],
     )
 
+    task = "dim_visa_qc"
+
     dim_visa_qc, dim_visa_qc_sensor = add_spark_step(
         task=task,
         path_to_egg=config["s3"]["egg"],
@@ -285,6 +286,8 @@ with DAG(**config["dag"]) as dag:
         staging_path=config["staging"]["VisaMapStaging"],
         adm_path=config["adm"]["VisaMap"],
     )
+
+    task = "dim_port_qc"
 
     dim_port_qc, dim_port_qc_sensor = add_spark_step(
         task=task,

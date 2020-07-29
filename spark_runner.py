@@ -11,22 +11,18 @@ if __name__ == "__main__":
 
     spark = SparkSession.builder.appName("Immigration_ETL").getOrCreate()
 
-    log.info("{}".format(sys.argv[1]))
-    log.info("{}".format(sys.argv[2]))
-    log.info("{}".format(sys.argv[3]))
-    log.info("{}".format(sys.argv[4]))
-    log.info("{}".format(sys.argv[5]))
-
     task = sys.argv[1]
     input_path = sys.argv[2]
     input_file = sys.argv[3]
     staging_path = sys.argv[4]
     adm_path = sys.argv[5]
+    execution_date = sys.argv[6]
 
     log.info("Running Spark job for task {}".format(task))
     log.info("Path to input files for task {} is {}".format(task, input_path))
     log.info("Input file name for task {} is {}".format(task, input_file))
     log.info("ADM path passed for task {} is {}".format(task, adm_path))
+    log.info("Executing DAG on {}".format(execution_date))
 
     if task == "stage_immigration":
 
@@ -191,7 +187,7 @@ if __name__ == "__main__":
 
         city_res_dim = load_parquet(spark=spark, path=staging_path)
 
-        city_res_dim = clean_other_dims(city_res_dim)
+        city_res_dim = clean_other_dims(city_res_dim, "city_res_dim")
         city_res_dim = city_res_dim.withColumnRenamed(
             "lookup_value", "city_res"
         ).withColumnRenamed("map", "city_res_desc")
@@ -207,7 +203,7 @@ if __name__ == "__main__":
 
         mode_dim = load_parquet(spark=spark, path=staging_path)
 
-        mode_dim = clean_other_dims(mode_dim)
+        mode_dim = clean_other_dims(mode_dim, "mode_dim")
         mode_dim = mode_dim.withColumnRenamed(
             "lookup_value", "arrival_mode"
         ).withColumnRenamed("map", "arrival_mode_desc")
@@ -223,7 +219,7 @@ if __name__ == "__main__":
 
         state_dim = load_parquet(spark=spark, path=staging_path)
 
-        state_dim = clean_other_dims(state_dim)
+        state_dim = clean_other_dims(state_dim, "state_dim")
         state_dim = state_dim.withColumnRenamed(
             "lookup_value", "us_address_state"
         ).withColumnRenamed("map", "state_desc")
@@ -239,7 +235,7 @@ if __name__ == "__main__":
 
         visa_dim = load_parquet(spark=spark, path=staging_path)
 
-        visa_dim = clean_other_dims(visa_dim)
+        visa_dim = clean_other_dims(visa_dim, "visa_dim")
         visa_dim = visa_dim.withColumnRenamed(
             "lookup_value", "visa_code"
         ).withColumnRenamed("map", "visa_desc")
@@ -302,7 +298,7 @@ if __name__ == "__main__":
                     "IntegerType",
                     "IntegerType",
                     "IntegerType",
-                    "IntegerType",
+                    "StringType",
                     "IntegerType",
                     "StringType",
                     "DateType",
@@ -316,7 +312,7 @@ if __name__ == "__main__":
                     "StringType",
                     "StringType",
                     "StringType",
-                    "IntegerType",
+                    "StringType",
                     "StringType",
                     "IntegerType",
                     "StringType",

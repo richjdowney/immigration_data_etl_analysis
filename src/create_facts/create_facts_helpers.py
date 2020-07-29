@@ -1,5 +1,6 @@
 from utils.data_processing import *
 from pyspark.sql import DataFrame as SparkDataFrame
+from utils.logging_framework import log
 
 
 def clean_immigration(df: SparkDataFrame) -> SparkDataFrame:
@@ -27,6 +28,8 @@ def clean_immigration(df: SparkDataFrame) -> SparkDataFrame:
     # count - not clear what this is "used for summary statistics"
     # entdepu - is 99% missing
     # insnum - is 99% missing
+
+    log.info("Checking the immigration fact table")
 
     df = df.drop("count", "occup", "count", "entdepu", "insnum")
 
