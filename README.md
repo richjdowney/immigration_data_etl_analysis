@@ -55,6 +55,8 @@ The decision was taken to have a task related to each data source to allow for e
 
 The final data model is shown in the star schema below:
 
+![](Images/schema.PNG)  
+
 This schema limits the space required to store the data as long text strings are stored in dimension tables with only integer values held in the main fact table.  The schema allows users to query the data in an efficient way, limiting the need for complex joins.
 
 
