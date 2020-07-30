@@ -59,4 +59,8 @@ The final data model is shown in the star schema below:
 
 This schema limits the space required to store the data as long text strings are stored in dimension tables with only integer values held in the main fact table.  The schema allows users to query the data in an efficient way, limiting the need for complex joins.
 
+The schema contains a single fact table with information on international arrivals into the US and several dimension tables with further 'lookup' information on ports, airports, city demographics, visa types, states and modes of arrival.
+
+The following tables contain a data dictionary for each of the fact and dimension tables:
+
 
