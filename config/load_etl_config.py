@@ -1,5 +1,5 @@
 import yaml
-from typing import Any, Dict, Tuple
+from typing import Any, Dict
 from utils.logging_framework import log
 import pydantic
 
@@ -68,9 +68,11 @@ class ConfigS3(pydantic.BaseModel):
     # Name of s3 bucket
     Bucket: str
 
-    # Paths to runner files on s3(egg app, main runner)
+    # Paths to runner files on s3(egg app, runners)
     egg: str
-    runner: str
+    StageRunner: str
+    FactDimRunner: str
+    DataQualityRunner: str
 
 
 class ConfigApp(pydantic.BaseModel):
@@ -78,6 +80,9 @@ class ConfigApp(pydantic.BaseModel):
 
     # Path to the root directory on EC2
     RootPath: str
+
+    # Path to the runner files
+    PathToRunners: str
 
     # Path to the bin directory on EC2
     PathToBin: str
@@ -91,8 +96,14 @@ class ConfigApp(pydantic.BaseModel):
     # Name of the main application egg object
     EggObject: str
 
-    # Name of the main Spark runner object
-    RunnerObject: str
+    # Name of Spark runner to stage tables
+    StageRunner: str
+
+    # Name of Spark runner to create fact and dim tables
+    FactDimRunner: str
+
+    # Name of Spark runner for data quality checks
+    DataQualityRunner: str
 
     # Name of the shell script for bootstrapping
     DependenciesShell: str
@@ -116,6 +127,7 @@ class ConfigInputs(pydantic.BaseModel):
     ImmigrationInput: str
     AirportCodesInput: str
     CitiesInput: str
+
 
 class ConfigStaging(pydantic.BaseModel):
 

@@ -56,17 +56,22 @@ s3:
 
   # Paths to runner files on s3(egg app, main runner)
   egg: "s3://immigration-data-etl/application/test_submit-0.1-py2.7.egg"
-  runner: "s3://immigration-data-etl/application/spark_runner.py"
+  StageRunner: "s3://immigration-data-etl/application/stage_tables_runner.py"
+  FactDimRunner: "s3://immigration-data-etl/application/create_fact_dim_tables_runner.py"
+  DataQualityRunner: "s3://immigration-data-etl/application/data_quality_runner.py"
 
 app:
 
   # Config for files related to running the Spark app on emr
   RootPath: "/home/ubuntu/immigration_code/"
+  PathToRunners: "/home/ubuntu/immigration_code/spark_runners/"
   PathToBin: "/home/ubuntu/immigration_code/bin/"
   PathToEgg: "/home/ubuntu/immigration_code/dist/"
   PathToUtils: "/home/ubuntu/immigration_code/utils/"
   EggObject: "test_submit-0.1-py2.7.egg"
-  RunnerObject: "spark_runner.py"
+  StageRunner: "stage_tables_runner.py"
+  FactDimRunner: "create_fact_dim_tables_runner.py"
+  DataQualityRunner: "data_quality_runner.py"
   DependenciesShell: "install_dependencies.sh"
   Requirements: "requirements.txt"
 

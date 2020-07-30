@@ -15,6 +15,7 @@ from utils.run_spark_jobs import add_spark_step
 from utils.logging_framework import log
 from utils.copy_app_to_s3 import copy_app_to_s3
 
+
 # Load the config file
 config = load_yaml(constants.config_path)
 
@@ -53,7 +54,7 @@ with DAG(**config["dag"]) as dag:
     stage_immigration, immigration_step_sensor = add_spark_step(
         task=task,
         path_to_egg=config["s3"]["egg"],
-        runner=config["s3"]["runner"],
+        runner=config["s3"]["StageRunner"],
         staging_path=config["staging"]["ImmigrationStaging"],
         input_path=config["input"]["InputPath"],
         input_file=config["input"]["ImmigrationInput"],
@@ -65,7 +66,7 @@ with DAG(**config["dag"]) as dag:
     stage_airport_codes, airport_codes_step_sensor = add_spark_step(
         task=task,
         path_to_egg=config["s3"]["egg"],
-        runner=config["s3"]["runner"],
+        runner=config["s3"]["StageRunner"],
         staging_path=config["staging"]["AirportStaging"],
         input_path=config["input"]["InputPath"],
         input_file=config["input"]["AirportCodesInput"],
@@ -76,7 +77,7 @@ with DAG(**config["dag"]) as dag:
     stage_cities, cities_step_sensor = add_spark_step(
         task=task,
         path_to_egg=config["s3"]["egg"],
-        runner=config["s3"]["runner"],
+        runner=config["s3"]["StageRunner"],
         staging_path=config["staging"]["CitiesStaging"],
         input_path=config["input"]["InputPath"],
         input_file=config["input"]["CitiesInput"],
@@ -87,7 +88,7 @@ with DAG(**config["dag"]) as dag:
     stage_cit_res_map, cit_res_map_step_sensor = add_spark_step(
         task=task,
         path_to_egg=config["s3"]["egg"],
-        runner=config["s3"]["runner"],
+        runner=config["s3"]["StageRunner"],
         staging_path=config["staging"]["CitResMapStaging"],
         input_path=config["input"]["InputPath"],
         input_file=config["input"]["CitResMapInput"],
@@ -98,7 +99,7 @@ with DAG(**config["dag"]) as dag:
     stage_mode_map, mode_map_step_sensor = add_spark_step(
         task=task,
         path_to_egg=config["s3"]["egg"],
-        runner=config["s3"]["runner"],
+        runner=config["s3"]["StageRunner"],
         staging_path=config["staging"]["ModeMapStaging"],
         input_path=config["input"]["InputPath"],
         input_file=config["input"]["ModeMapInput"],
@@ -109,7 +110,7 @@ with DAG(**config["dag"]) as dag:
     stage_state_map, state_map_step_sensor = add_spark_step(
         task=task,
         path_to_egg=config["s3"]["egg"],
-        runner=config["s3"]["runner"],
+        runner=config["s3"]["StageRunner"],
         staging_path=config["staging"]["StateMapStaging"],
         input_path=config["input"]["InputPath"],
         input_file=config["input"]["StateMapInput"],
@@ -120,7 +121,7 @@ with DAG(**config["dag"]) as dag:
     stage_visa_map, visa_map_step_sensor = add_spark_step(
         task=task,
         path_to_egg=config["s3"]["egg"],
-        runner=config["s3"]["runner"],
+        runner=config["s3"]["StageRunner"],
         staging_path=config["staging"]["VisaMapStaging"],
         input_path=config["input"]["InputPath"],
         input_file=config["input"]["VisaMapInput"],
@@ -131,7 +132,7 @@ with DAG(**config["dag"]) as dag:
     stage_port_map, port_map_step_sensor = add_spark_step(
         task=task,
         path_to_egg=config["s3"]["egg"],
-        runner=config["s3"]["runner"],
+        runner=config["s3"]["StageRunner"],
         staging_path=config["staging"]["PortMapStaging"],
         input_path=config["input"]["InputPath"],
         input_file=config["input"]["PortMapInput"],
@@ -142,7 +143,7 @@ with DAG(**config["dag"]) as dag:
     create_fact_table, create_fact_table_sensor = add_spark_step(
         task=task,
         path_to_egg=config["s3"]["egg"],
-        runner=config["s3"]["runner"],
+        runner=config["s3"]["FactDimRunner"],
         staging_path=config["staging"]["ImmigrationStaging"],
         adm_path=config["adm"]["Immigration"],
     )
@@ -152,7 +153,7 @@ with DAG(**config["dag"]) as dag:
     create_dim_airport_codes, create_dim_airport_codes_sensor = add_spark_step(
         task=task,
         path_to_egg=config["s3"]["egg"],
-        runner=config["s3"]["runner"],
+        runner=config["s3"]["FactDimRunner"],
         staging_path=config["staging"]["AirportStaging"],
         adm_path=config["adm"]["Airport"],
     )
@@ -162,7 +163,7 @@ with DAG(**config["dag"]) as dag:
     create_dim_city_demos, create_dim_city_demos_sensor = add_spark_step(
         task=task,
         path_to_egg=config["s3"]["egg"],
-        runner=config["s3"]["runner"],
+        runner=config["s3"]["FactDimRunner"],
         staging_path=config["staging"]["CitiesStaging"],
         adm_path=config["adm"]["Cities"],
     )
@@ -172,7 +173,7 @@ with DAG(**config["dag"]) as dag:
     create_dim_city_res, create_dim_city_res_sensor = add_spark_step(
         task=task,
         path_to_egg=config["s3"]["egg"],
-        runner=config["s3"]["runner"],
+        runner=config["s3"]["FactDimRunner"],
         staging_path=config["staging"]["CitResMapStaging"],
         adm_path=config["adm"]["CitResMap"],
     )
@@ -182,7 +183,7 @@ with DAG(**config["dag"]) as dag:
     create_dim_mode, create_dim_mode_sensor = add_spark_step(
         task=task,
         path_to_egg=config["s3"]["egg"],
-        runner=config["s3"]["runner"],
+        runner=config["s3"]["FactDimRunner"],
         staging_path=config["staging"]["ModeMapStaging"],
         adm_path=config["adm"]["ModeMap"],
     )
@@ -192,7 +193,7 @@ with DAG(**config["dag"]) as dag:
     create_dim_state, create_dim_state_sensor = add_spark_step(
         task=task,
         path_to_egg=config["s3"]["egg"],
-        runner=config["s3"]["runner"],
+        runner=config["s3"]["FactDimRunner"],
         staging_path=config["staging"]["StateMapStaging"],
         adm_path=config["adm"]["StateMap"],
     )
@@ -202,7 +203,7 @@ with DAG(**config["dag"]) as dag:
     create_dim_visa, create_dim_visa_sensor = add_spark_step(
         task=task,
         path_to_egg=config["s3"]["egg"],
-        runner=config["s3"]["runner"],
+        runner=config["s3"]["FactDimRunner"],
         staging_path=config["staging"]["VisaMapStaging"],
         adm_path=config["adm"]["VisaMap"],
     )
@@ -212,7 +213,7 @@ with DAG(**config["dag"]) as dag:
     create_dim_port, create_dim_port_sensor = add_spark_step(
         task=task,
         path_to_egg=config["s3"]["egg"],
-        runner=config["s3"]["runner"],
+        runner=config["s3"]["FactDimRunner"],
         staging_path=config["staging"]["PortMapStaging"],
         adm_path=config["adm"]["PortMap"],
     )
@@ -222,7 +223,7 @@ with DAG(**config["dag"]) as dag:
     fact_immigration_qc, fact_immigration_qc_sensor = add_spark_step(
         task=task,
         path_to_egg=config["s3"]["egg"],
-        runner=config["s3"]["runner"],
+        runner=config["s3"]["DataQualityRunner"],
         staging_path=config["staging"]["ImmigrationStaging"],
         adm_path=config["adm"]["Immigration"],
     )
@@ -232,7 +233,7 @@ with DAG(**config["dag"]) as dag:
     dim_airport_codes_qc, dim_airport_codes_qc_sensor = add_spark_step(
         task=task,
         path_to_egg=config["s3"]["egg"],
-        runner=config["s3"]["runner"],
+        runner=config["s3"]["DataQualityRunner"],
         staging_path=config["staging"]["AirportStaging"],
         adm_path=config["adm"]["Airport"],
     )
@@ -242,7 +243,7 @@ with DAG(**config["dag"]) as dag:
     dim_city_qc, dim_city_qc_sensor = add_spark_step(
         task=task,
         path_to_egg=config["s3"]["egg"],
-        runner=config["s3"]["runner"],
+        runner=config["s3"]["DataQualityRunner"],
         staging_path=config["staging"]["CitiesStaging"],
         adm_path=config["adm"]["Cities"],
     )
@@ -252,7 +253,7 @@ with DAG(**config["dag"]) as dag:
     dim_cit_res_qc, dim_cit_res_qc_sensor = add_spark_step(
         task=task,
         path_to_egg=config["s3"]["egg"],
-        runner=config["s3"]["runner"],
+        runner=config["s3"]["DataQualityRunner"],
         staging_path=config["staging"]["CitResMapStaging"],
         adm_path=config["adm"]["CitResMap"],
     )
@@ -262,7 +263,7 @@ with DAG(**config["dag"]) as dag:
     dim_mode_qc, dim_mode_qc_sensor = add_spark_step(
         task=task,
         path_to_egg=config["s3"]["egg"],
-        runner=config["s3"]["runner"],
+        runner=config["s3"]["DataQualityRunner"],
         staging_path=config["staging"]["ModeMapStaging"],
         adm_path=config["adm"]["ModeMap"],
     )
@@ -272,7 +273,7 @@ with DAG(**config["dag"]) as dag:
     dim_state_qc, dim_state_qc_sensor = add_spark_step(
         task=task,
         path_to_egg=config["s3"]["egg"],
-        runner=config["s3"]["runner"],
+        runner=config["s3"]["DataQualityRunner"],
         staging_path=config["staging"]["StateMapStaging"],
         adm_path=config["adm"]["StateMap"],
     )
@@ -282,7 +283,7 @@ with DAG(**config["dag"]) as dag:
     dim_visa_qc, dim_visa_qc_sensor = add_spark_step(
         task=task,
         path_to_egg=config["s3"]["egg"],
-        runner=config["s3"]["runner"],
+        runner=config["s3"]["DataQualityRunner"],
         staging_path=config["staging"]["VisaMapStaging"],
         adm_path=config["adm"]["VisaMap"],
     )
@@ -292,7 +293,7 @@ with DAG(**config["dag"]) as dag:
     dim_port_qc, dim_port_qc_sensor = add_spark_step(
         task=task,
         path_to_egg=config["s3"]["egg"],
-        runner=config["s3"]["runner"],
+        runner=config["s3"]["DataQualityRunner"],
         staging_path=config["staging"]["PortMapStaging"],
         adm_path=config["adm"]["PortMap"],
     )

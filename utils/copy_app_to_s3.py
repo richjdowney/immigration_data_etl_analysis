@@ -21,12 +21,28 @@ def copy_app_to_s3(*op_args) -> log:
         object_name="application/{}".format(config["app"]["EggObject"]),
     )
 
-    # Upload main class file to s3
+    # Upload runner for staging tables to s3
     load_file_to_s3(
-        file_name="{}{}".format(config["app"]["RootPath"], config["app"]["RunnerObject"]),
+        file_name="{}{}".format(config["app"]["PathToRunners"], config["app"]["StageRunner"]),
         bucket=config["s3"]["Bucket"],
         aws_credentials_id=config["airflow"]["AwsCredentials"],
-        object_name="application/{}".format(config["app"]["RunnerObject"]),
+        object_name="application/{}".format(config["app"]["StageRunner"]),
+    )
+
+    # Upload runner for creating fact and dim tables to s3
+    load_file_to_s3(
+        file_name="{}{}".format(config["app"]["PathToRunners"], config["app"]["FactDimRunner"]),
+        bucket=config["s3"]["Bucket"],
+        aws_credentials_id=config["airflow"]["AwsCredentials"],
+        object_name="application/{}".format(config["app"]["FactDimRunner"]),
+    )
+
+    # Upload runner for data quality checks to s3
+    load_file_to_s3(
+        file_name="{}{}".format(config["app"]["PathToRunners"], config["app"]["DataQualityRunner"]),
+        bucket=config["s3"]["Bucket"],
+        aws_credentials_id=config["airflow"]["AwsCredentials"],
+        object_name="application/{}".format(config["app"]["DataQualityRunner"]),
     )
 
     # Upload requirements
