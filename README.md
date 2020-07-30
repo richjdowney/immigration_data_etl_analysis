@@ -30,7 +30,22 @@ Airflow allows for the code to be automated and scheduled freeing up data engine
 
 ### Airflow Orchestration
 
+In order to run Airflow it was installed on the same EC2 cluster where the code is deployed.  Steps to install Airflow using a Postgres database can be found [here](https://medium.com/@abraham.pabbathi/airflow-on-aws-ec2-instance-with-ubuntu-aff8d3206171)
 
-![](Images/airflow_tasks.PNG)
+The image below illustrates the orchestration of the tasks within Airflow:
 
-Link to airflow install...
+![](Images/airflow_tasks.PNG)  
+
+The DAG contains the following tasks:
+
+**create_app_egg:**  Creates an egg file from the latest code
+**upload_app_to_s3:**  Uploads the application egg and Spark runner files containing the main functions to S3
+**create_job_flow:**  Creates an EMR cluster
+**add_step_stage_XXX:**  Adds Spark steps for each dataset to create the staging parquets
+**watch_stage_XXX:**  Sensors for each staging step to determine when they are complete
+**add_step_create_XXX:**  Adds Spark steps to create fact and dimension tables
+**watch_create_XXX:**  Sensors for each step creating fact and dimension tables to determine when they are complete
+**add_step_XXX_qc:**  Adds Spark steps for the quality checks for each fact and dimension table
+**watch_XXX_qc:**  Sensors for each step running the quality checks to determine when they are complete
+**remove_cluster:**  Terminates the cluster when all steps are completed
+
