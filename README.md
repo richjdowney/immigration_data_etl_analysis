@@ -63,4 +63,6 @@ The schema contains a single fact table with information on international arriva
 
 The following tables contain a data dictionary for each of the fact and dimension tables:
 
+![](Images/fact_table.PNG)
 
+![](Images/dimension_tables.PNG)
