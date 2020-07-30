@@ -51,3 +51,5 @@ The DAG contains the following tasks:
 
 The decision was taken to have a task related to each data source to allow for easy debugging as the code will fail on the tasks and upstream tasks related to a single data source.  This also means that processing will continue on all other data sources that do not fail allowing for faster completion of the process once bugs are fixed.
 
+### Analysis Data Mart and Schema  
+
