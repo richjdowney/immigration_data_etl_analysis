@@ -26,7 +26,7 @@ PyCharm was used for an IDE and was set-up to automatically deploy code changes 
 
 Spark was chosen for data processing as it allows for fast parallel processing of massive amounts of data and has easy to use APIs including support for SQL.  While the data volumes are currently small, utilizing Spark allows for the process to easily scale e.g. if data volumes were increased by 100X by adding more resources to EMR clusters.  Utilizing EMR also allows the solution to scale as more clusters and resources can be added as more people require access to the data.
 
-Airflow allows for the code to be automated and scheduled freeing up data engineering resources.  For example, if the process was required to be run at 7am every morning, utilizing Airflow would allow the ETL process to be easily scheduled to accomplish this goal.
+Airflow allows for the code to be automated and scheduled freeing up data engineering resources.  For example, if the process was required to be run at 7am every morning, utilizing Airflow would allow the ETL process to be easily scheduled to accomplish this goal.  In addition, the execution date is passed as a conext variable to the Spark code and could be used to process only each day at a time rather than the entire raw data as it is currently set up.
 
 ### Airflow Orchestration
 
@@ -38,14 +38,16 @@ The image below illustrates the orchestration of the tasks within Airflow:
 
 The DAG contains the following tasks:
 
-**create_app_egg:**  Creates an egg file from the latest code
-**upload_app_to_s3:**  Uploads the application egg and Spark runner files containing the main functions to S3
-**create_job_flow:**  Creates an EMR cluster
-**add_step_stage_XXX:**  Adds Spark steps for each dataset to create the staging parquets
-**watch_stage_XXX:**  Sensors for each staging step to determine when they are complete
-**add_step_create_XXX:**  Adds Spark steps to create fact and dimension tables
-**watch_create_XXX:**  Sensors for each step creating fact and dimension tables to determine when they are complete
-**add_step_XXX_qc:**  Adds Spark steps for the quality checks for each fact and dimension table
-**watch_XXX_qc:**  Sensors for each step running the quality checks to determine when they are complete
-**remove_cluster:**  Terminates the cluster when all steps are completed
+**create_app_egg:**  Creates an egg file from the latest code  
+**upload_app_to_s3:**  Uploads the application egg and Spark runner files containing the main functions to S3  
+**create_job_flow:**  Creates an EMR cluster  
+**add_step_stage_XXX:**  Adds Spark steps for each dataset to create the staging parquets  
+**watch_stage_XXX:**  Sensors for each staging step to determine when they are complete  
+**add_step_create_XXX:**  Adds Spark steps to create fact and dimension tables  
+**watch_create_XXX:**  Sensors for each step creating fact and dimension tables to determine when they are complete  
+**add_step_XXX_qc:**  Adds Spark steps for the quality checks for each fact and dimension table  
+**watch_XXX_qc:**  Sensors for each step running the quality checks to determine when they are complete  
+**remove_cluster:**  Terminates the cluster when all steps are completed  
+
+The decision was taken to have a task related to each data source to allow for easy debugging as the code will fail on the tasks and upstream tasks related to a single data source.  This also means that processing will continue on all other data sources that do not fail allowing for faster completion of the process once bugs are fixed.
 
