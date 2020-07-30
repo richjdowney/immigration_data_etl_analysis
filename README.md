@@ -30,4 +30,7 @@ Airflow allows for the code to be automated and scheduled freeing up data engine
 
 ### Airflow Orchestration
 
+
+![](Images/airflow_tasks.PNG)
+
 Link to airflow install...
