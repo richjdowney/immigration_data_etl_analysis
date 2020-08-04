@@ -1,4 +1,4 @@
-# Example ETL with Python, Spark and Airflow
+# ETL pipeline with Python, Spark and Airflow
 
 ### Project scope
 
